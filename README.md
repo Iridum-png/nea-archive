@@ -4,6 +4,6 @@ This is the github repository containing all the code used in the production of 
 
 This project is based around creating a web-based chess AI, inspired by that of Stockfish on lichess
 
-`<hr>`
+
 
 The frontend of the site is a react app. The backend involves SQL, python, and rust.
