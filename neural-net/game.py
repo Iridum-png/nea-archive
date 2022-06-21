@@ -51,14 +51,26 @@ class Board:
         current[1], target[1] = chars[start[0]], chars[end[0]]
         current[0], target[0] = int(start[1])-1, int(end[1])-1
 
+        if check_win(self.board) != 'N':
+            print("Checkmate!")
+            won()
+
         if self.check():
-            self.board[target[0]][target[1]] = self.board[current[0]][current[1]]
-            self.board[current[0]][current[1]] = '  '
+            working = self.board[current[0]][current[1]]
+            oldx = working.x
+            oldy = working.y
+            working.x = target[0]
+            working.y = target[1]
+            with open ("log.txt", "a") as f:
+                f.write(f"{oldx}{oldy}->{working.x},{working.y}")
+
+            self.board[target[0]][target[1]] = working
+            working = '  '
         else:
             print("Invalid move")
             self.move()
 
-    def check(self) -> bool:
+    def check_move(self) -> bool:
         return True
 
 class Piece:
@@ -72,9 +84,23 @@ class Piece:
         pass
 
 
-def check_win(board) -> bool:
-    from random import choice
-    return choice([True, False])
+def check_win(board) -> str:
+    black = True
+    white = True
+    for row in board:
+        for piece in row:
+            try:
+                if piece.colour == 'W' and piece.type == 'K':
+                    black = False
+                elif piece.colour == 'B' and piece.type == 'K':
+                    white = False
+            except AttributeError:
+                continue
+    return "B" if black else "W" if white else "D" if black and white else "N" # This return system sucks
+
+
+def won():
+    pass
 
 
 def main():
@@ -89,8 +115,12 @@ def main():
         board.output()
         print(f"\tMove {move_num} | Black")
         board.move()
-        check_win(board)
+        
 
 os.system('cls' if os.name == 'nt' else 'clear')
 if __name__ == "__main__":
+    with open("log.txt", "w"):
+        pass   # Clears the logging file
     main()
+
+# check_win() change return system
