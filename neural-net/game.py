@@ -41,7 +41,7 @@ class Board:
         print(" +----+----+----+----+----+----+----+----+")
         print("    a    b    c    d    e    f    g    h", end='')
 
-    def move(self):
+    def move(self, turn):
         chars = {'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'f': 5, 'g': 6, 'h': 7}
         current = ['', '']
         target = ['', '']
@@ -50,27 +50,30 @@ class Board:
         # Format the input to be in the correct format for list references
         current[1], target[1] = chars[start[0]], chars[end[0]]
         current[0], target[0] = int(start[1])-1, int(end[1])-1
+        working = self.board[current[0]][current[1]]
 
         if check_win(self.board) != 'N':
             print("Checkmate!")
             won()
-
-        if self.check():
-            working = self.board[current[0]][current[1]]
-            oldx = working.x
-            oldy = working.y
-            working.x = target[0]
-            working.y = target[1]
-            with open ("log.txt", "a") as f:
-                f.write(f"{oldx}{oldy}->{working.x},{working.y}")
-
-            self.board[target[0]][target[1]] = working
-            working = '  '
-        else:
-            print("Invalid move")
+        try:
+            _ = working.make_move(target[0], target[1],"S")
+        except AttributeError:
+            print("Invalid move - no piece at this position")
             self.move()
+        else:
+            if self.check_move(turn, working.colour):
+                working.make_move(target[1], target[0], "R")
+                with open ("log.txt", "a") as f:
+                    f.write(f"{working.prevx},{working.prevy}->{working.x},{working.y} {working.colour}{working.type}\n")
 
-    def check_move(self) -> bool:
+                self.board[target[0]][target[1]], self.board[current[0]][current[1]] = working, '  '
+            else:
+                print("Invalid move - move not allowed")
+                self.move(turn)
+
+    def check_move(self, turn, colour) -> bool:
+        if turn != colour:
+            return False
         return True
 
 class Piece:
@@ -78,10 +81,14 @@ class Piece:
         self.colour = colour
         self.x = x
         self.y = y
+        self.prevx = -1
+        self.prevy = -1
         self.type = type
 
-    def make_move(self, x, y):
-        pass
+    def make_move(self, x, y, run) -> tuple:
+        if run == "R":
+            self.prevx, self.prevy = str(self.x), str(self.y)
+            self.x, self.y = x, y
 
 
 def check_win(board) -> str:
@@ -111,16 +118,17 @@ def main():
         move_num += 1
         board.output()
         print(f"\tMove {move_num} | White")
-        board.move()
+        board.move("W")
         board.output()
         print(f"\tMove {move_num} | Black")
-        board.move()
+        board.move("B")
         
 
 os.system('cls' if os.name == 'nt' else 'clear')
 if __name__ == "__main__":
     with open("log.txt", "w"):
-        pass   # Clears the logging file
+        pass   # Clears the logging file each time the program is run
     main()
 
 # check_win() change return system
+# make_move() weird variable issue
