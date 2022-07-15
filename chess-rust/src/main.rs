@@ -1,3 +1,5 @@
+use core::fmt::Debug;
+
 struct Board {
     order: Vec<char>,
     board: Vec<Vec<Piece>>,
@@ -10,6 +12,16 @@ struct Piece {
     prevx: u8,
     prevy: u8,
     piece: char,
+}
+
+impl Debug for Piece {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "colour: {}, x: {}, y: {}, prevx: {}, prevy: {}, piece: {}",
+            self.colour, self.x, self.y, self.prevx, self.prevy, self.piece
+        )
+    }
 }
 
 impl Board {
@@ -30,6 +42,7 @@ impl Board {
                 prevy: i as u8,
                 piece: order[i],
             });
+            println!("{:?}", self.board);
         }
     }
 }
