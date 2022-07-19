@@ -51,10 +51,14 @@ class Board:
         current[1], target[1] = chars[start[0]], chars[end[0]]
         current[0], target[0] = int(start[1])-1, int(end[1])-1
         working = self.board[current[0]][current[1]]
+        won = check_win(self.board)
 
-        if check_win(self.board) != 'N':
+        if won in ['B', 'N']:
             print("Checkmate!")
-            won()
+            exit()
+        elif won == 'D':
+            print("Draw")
+            exit()
         try:
             _ = working.make_move(target[0], target[1],"S")
         except AttributeError:
@@ -131,4 +135,3 @@ if __name__ == "__main__":
     main()
 
 # check_win() change return system
-# make_move() weird variable issue

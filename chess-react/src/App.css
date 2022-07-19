@@ -1,0 +1,14 @@
+.square {
+  height: 500px;
+  width: 500px;
+  background-color: #000000;
+  color: aquamarine;
+  text-align: center;
+}
+
+.squareEven {
+  height: 50px;
+  width: 50px;
+  background-color: #eee;
+}
+
