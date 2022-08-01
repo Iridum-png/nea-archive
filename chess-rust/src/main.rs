@@ -102,7 +102,10 @@ fn output(game: Board) {
     for i in 0..8 {
         println!("+----+----+----+----+----+----+----+----+");
         print!("{}|", 8 - i);
-        for piece in game.board[i] {}
+        for piece in game.board[i].iter() {
+            print!("{}|", piece);
+        }
+        println!();
     }
 }
 
