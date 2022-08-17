@@ -55,14 +55,13 @@ class Board:
         # Check if the move is legal
         if working.check_move(target):
             # If it is, make the move
-            
             working.make_move([target[0], target[1]], turn)
             self.board[current[0]][current[1]] = '  '
             self.board[target[0]][target[1]] = working
         won = check_win(self.board)
 
 
-def check_win(board) -> int:
+def check_win(board) -> int: # This function might need to be rewrittin to be more efficient
     black = white = True
     for row in board:
         for piece in row:
@@ -131,7 +130,7 @@ if __name__ == "__main__":
         pass   # Clears the logging file each time the program is run
     main()
 
-"""
+""" 
 TODO
  - Add check
  - Add file logging
