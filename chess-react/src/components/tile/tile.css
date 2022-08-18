@@ -3,6 +3,8 @@
 }
 
 .tile {
+    display: grid;
+    place-content: center;
     width: var(--smallest-ten);
     height: var(--smallest-ten);
 }
@@ -13,4 +15,8 @@
 
 .white-tile {
     background-color: #ebecd0;
+}
+
+.tile img {
+    width: var(--smallest-ten);
 }
