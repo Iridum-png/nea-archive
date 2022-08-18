@@ -1,0 +1,16 @@
+:root {
+    --smallest-ten: min(10vh, 10vw);
+}
+
+.tile {
+    width: var(--smallest-ten);
+    height: var(--smallest-ten);
+}
+
+.black-tile {
+    background-color: #779556;
+}
+
+.white-tile {
+    background-color: #ebecd0;
+}
