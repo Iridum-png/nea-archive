@@ -1,5 +1,6 @@
 import './chessboard.css';
 import Tile from '../tile/tile';
+import React from 'react';
 
 interface Props {
     fen: string
@@ -15,6 +16,8 @@ const pieces: Piece[] = [];
 
 const horizontalAxis = ["a", "b", "c", "d", "e", "f", "g", "h"];
 const verticalAxis = ["1", "2", "3", "4", "5", "6", "7", "8"]; 
+
+let activePiece: HTMLElement | null = null; 
 
 function FenToPos(fen: string) {
     const fenArr = fen.split('');
@@ -49,25 +52,56 @@ function isNumeric(str: any) {
     return !isNaN(str);
 }   
 
+function grabPiece(e: React.MouseEvent) {
+    const element = e.target as HTMLImageElement;
+    if (element.classList.contains('chess-piece')) {
+        const x = e.clientX;
+        const y = e.clientY;
+
+        element.style.position = 'absolute';
+        element.style.left = `${x-40}px`;
+        element.style.top = `${y - 40}px`;
+        
+        activePiece = element;
+    }
+}
+
+function movePiece(e: React.MouseEvent) {
+    if (activePiece) {
+        const x = e.clientX;
+        const y = e.clientY;
+
+        activePiece.style.position = 'absolute';
+        activePiece.style.left = `${x-40}px`;
+        activePiece.style.top = `${y - 40}px`;
+    }
+}
+
+function dropPiece(e: React.MouseEvent) {
+    if (activePiece) {
+        activePiece = null;
+    }
+}
+
 export default function Chessboard({ fen }: Props) {
     let board = [];
     
-    fen = '8/5k2/3p4/1p1Pp2p/pP2Pp1P/P4P1K/8/8 b';
+    fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
     const boardArray = FenToPos(fen.substring(0, fen.indexOf(' ')).replaceAll('/', '')); // Takes only the needed part to calculate the position of the board
     
     for (let i = 0; i < 64; i++) {
         if (boardArray[i] === ' ') {
             pieces.push({
-                image: undefined, 
+                image: undefined,
                 x: i % 8,
                 y: Math.floor(i / 8)
             });
         } else {
             pieces.push({
-            image:  boardArray[i], 
-            x: i % 8,
-            y: Math.floor(i / 8)
-        });
+                image: boardArray[i],
+                x: i % 8,
+                y: Math.floor(i / 8)
+            });
         }
     }
 
@@ -81,9 +115,17 @@ export default function Chessboard({ fen }: Props) {
                     image = p.image;
                 }
             })
-            board.push(<Tile image={image} number={number}/>);
+            board.push(<Tile image={image} number={number} />);
         }
     }
 
-    return <div id="chessboard">{board}</div>
+    return (
+        <div
+            onMouseMove={(e) => movePiece(e)}
+            onMouseDown={(e) => grabPiece(e)}
+            onMouseUp={(e) => dropPiece(e)}
+            id="chessboard">
+            {board}
+        </div>
+    );
 }

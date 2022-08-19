@@ -9,6 +9,22 @@
     height: var(--smallest-ten);
 }
 
+.tile .chess-piece {
+    width: var(--smallest-ten);
+    height: var(--smallest-ten);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: var(--smallest-ten);
+}
+
+.tile .chess-piece:hover {
+    cursor: grab;
+}
+
+.tile .chess-piece:active {
+    cursor: grabbing;
+}
+
 .black-tile {
     background-color: #779556;
 }
