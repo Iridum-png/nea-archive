@@ -1,0 +1,14 @@
+:root {
+    --smallest-ten: min(10vh, 10vw);
+    --smallest-eighty: min(80vh, 80vw);
+}
+
+#chessboard {
+    display: grid;
+    grid-template-columns: repeat(8, var(--smallest-ten));
+    grid-template-rows: repeat(8, var(--smallest-ten));
+    margin: var(--smallest-ten);
+    background-color: black;
+    width: var(--smallest-eighty);
+    height: var(--smallest-eighty);
+}

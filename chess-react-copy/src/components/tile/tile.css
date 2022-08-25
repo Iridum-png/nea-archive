@@ -1,0 +1,38 @@
+:root {
+    --smallest-ten: min(10vh, 10vw);
+}
+
+.tile {
+    display: grid;
+    place-content: center;
+    width: var(--smallest-ten);
+    height: var(--smallest-ten);
+}
+
+.tile .chess-piece {
+    width: var(--smallest-ten);
+    height: var(--smallest-ten);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: var(--smallest-ten);
+}
+
+.tile .chess-piece:hover {
+    cursor: grab;
+}
+
+.tile .chess-piece:active {
+    cursor: grabbing;
+}
+
+.black-tile {
+    background-color: #779556;
+}
+
+.white-tile {
+    background-color: #ebecd0;
+}
+
+.tile img {
+    width: var(--smallest-ten);
+}
