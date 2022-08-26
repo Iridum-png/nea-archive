@@ -1,20 +1,16 @@
-:root {
-    --smallest-ten: min(10vh, 10vw);
-}
-
 .tile {
     display: grid;
     place-content: center;
-    width: var(--smallest-ten);
-    height: var(--smallest-ten);
+    width: 100px;
+    height: 100px;
 }
 
 .tile .chess-piece {
-    width: var(--smallest-ten);
-    height: var(--smallest-ten);
+    width: 100px;
+    height: 100px;
     background-repeat: no-repeat;
     background-position: center;
-    background-size: var(--smallest-ten);
+    background-size: 80px;
 }
 
 .tile .chess-piece:hover {
@@ -34,5 +30,5 @@
 }
 
 .tile img {
-    width: var(--smallest-ten);
+    width: 80px;
 }

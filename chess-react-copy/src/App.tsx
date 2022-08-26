@@ -1,11 +1,10 @@
 import './App.css';
-import Chessboard from './components/chessboard/chessboard';
+import Chessboard from './components/Chessboard/Chessboard';
 
 function App() {
-    // const defaultFen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
-    return (
+  return (
     <div id="app">
-      <Chessboard fen='rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'/>
+      <Chessboard/>
     </div>
   );
 }

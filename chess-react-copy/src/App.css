@@ -1,6 +1,6 @@
 #app {
-  background-color: #202020;
-  display: grid;
-  height: min(100vh, 100vw);
-  justify-items: left;
+    display: grid;
+    place-content: center;
+    height: 100vh;
+    background-color: #202020;
 }
