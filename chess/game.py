@@ -1,7 +1,14 @@
-from board import Board
-from piece import Piece
+def main():
+    board = Board()
 
-board = Board()
-piece = Piece('p', 'white')
+    board.loadFromFen()
+    board.printBoard()
 
-print(piece.colour())
+if __name__ == '__main__':
+    from board import Board
+    from piece import Piece
+
+    main()
+    
+else:
+    print("File run incorrectly")
