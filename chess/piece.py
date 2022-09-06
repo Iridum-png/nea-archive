@@ -6,7 +6,7 @@ class Piece:
         This might be making the program too complicated - will remove if it doesn't pay off in the end
         """
         self.values = {
-            # 'none': 0,
+            'none': 0,
             'king': 1,
             'pawn': 2,
             'knight': 3,
@@ -16,7 +16,7 @@ class Piece:
             'white': 8,
             'black': 16
         }
-        self.type_mask = 0b111
+        self.type_mask = 0b00111
         self.colour_mask = 0b11000
         self.value = self.values[value] + self.values[colour]
 
@@ -33,7 +33,11 @@ class Piece:
         values = [value for value in self.values.values()] # Terrible variable naming
         keys = [key for key in self.values.keys()]
         value = self.value & self.type_mask
-        return keys[values.index(value)][0].upper()
+        if keys[values.index(value)][0] == 'k':
+            prefix = 'k' if keys[values.index(value)][-1] == 'g' else 'n'
+        else:
+            prefix = keys[values.index(value)][0]
+        return prefix.upper()
 
 if __name__ == '__main__':
     print("File run incorrectly")
