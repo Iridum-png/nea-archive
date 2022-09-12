@@ -1,4 +1,5 @@
-# nea
-Repository for A Level computer science NEA. 
+# NEA
+
+Repository for A Level computer science NEA.
 
 Chess Neural Net

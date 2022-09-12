@@ -39,6 +39,13 @@ class Piece:
             prefix = keys[values.index(value)][0]
         return prefix.upper()
 
+    def isValid(working, target, turn):
+        if working.isColour(turn):
+            if target.isColour(turn):
+                return False
+            else:
+                return True
+        else:
+            return False
 if __name__ == '__main__':
     print("File run incorrectly")
-    

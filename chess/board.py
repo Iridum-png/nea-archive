@@ -46,20 +46,26 @@ class Board:
         print(f"  a  b  c  d  e  f  g  h\t{self.turn}")
 
     def move(self, start: tuple, end: tuple):
-        working_piece_index = start[0]*8 + start[1]
-        working_piece = self.board[working_piece_index]
+        working_index = start[0]*8 + start[1]
+        working = self.board[working_index]
         target_index = end[0]*8 + end[1]
-        print(working_piece.getColour() + working_piece.getType())
+        target = self.board[target_index]
 
-        self.board[target_index] = working_piece
-        self.board[working_piece_index] = '    '
-
-
-        self.turn = 'b' if self.turn == 'w' else 'w'
+        if working.isValid(working, target, self.turn):
+            self.board[target_index] = working
+            self.board[working_index] = '    '
+            self.turn = 'b' if self.turn == 'w' else 'w'
+        else:
+            print("Invalid move")
 
     def isWon(self):
         return False
 
+    def outputPiece(self, piece: Piece) -> str:
+        if piece == '    ':
+            return '    '
+        else:
+            return piece.getColour() + piece.getType()
+
 if __name__ == '__main__':
     print("File run incorrectly")
-    

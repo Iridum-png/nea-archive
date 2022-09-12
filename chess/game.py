@@ -1,6 +1,6 @@
 def process(coordinate: str) -> tuple:
-    print(int(coordinate[1]) - 1, 104 - ord(coordinate[0]))
-    return (int(coordinate[1]) - 1, 104 - ord(coordinate[0]))
+    print(8 - int(coordinate[1]), ord(coordinate[0]) - 97)
+    return (8 - int(coordinate[1]), ord(coordinate[0]) - 97)
 
 def turn(board) -> bool:
     start = process(input("Enter start position (eg a1): "))
@@ -16,7 +16,7 @@ def main():
 
     board.loadFromFen()
     won = False
-    
+
     while not won:
         board.printBoard()
         won = turn(board)
@@ -28,4 +28,3 @@ if __name__ == '__main__':
     main()
 else:
     print("File run incorrectly")
-    
