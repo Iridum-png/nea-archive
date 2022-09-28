@@ -1,3 +1,5 @@
+from game import Game
+
 class Piece:
     def __init__(self, colour: str, value: str='none'):
         """
@@ -13,8 +15,8 @@ class Piece:
             'bishop': 4,
             'rook': 5,
             'queen': 6,
-            'white': 8,
-            'black': 16
+            'w': 8,
+            'b': 16
         }
         self.type_mask = 0b00111
         self.colour_mask = 0b11000
@@ -39,13 +41,14 @@ class Piece:
             prefix = keys[values.index(value)][0]
         return prefix.upper()
 
-    def isValid(working, target, turn):
+    def isValid(self, working, target, turn):
         if working.isColour(turn):
-            if target.isColour(turn):
-                return False
-            else:
+            try:
+                if not target.isColour(turn):
+                    return True
+            except AttributeError:
                 return True
-        else:
-            return False
+        return False
+
 if __name__ == '__main__':
-    print("File run incorrectly")
+    print("File run incorrectly - please run game.py instead")
