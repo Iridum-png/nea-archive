@@ -8,13 +8,13 @@ def resetTurn(board) -> None:
 
 def turn(board) -> bool:
     valid_letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
-    start = input("Enter start position (eg a1): ")
+    start = first = input("Enter start position (eg a1): ")
     try:
         if start[0] in valid_letters:
             start = process(start)
         else:
             resetTurn(board)
-        end = input("Enter end position (eg h8): ")
+        end = target = input("Enter end position (eg h8): ")
         if end[0] in valid_letters:
             end = process(end)
         else:
@@ -26,6 +26,9 @@ def turn(board) -> bool:
     return board.isWon()
 
 def main():
+    with open(r'/Users/edwardbaker/Documents/nea/chess/output/log.log', 'w') as f:
+        pass
+
     board = Board()
 
     board.loadFromFen()

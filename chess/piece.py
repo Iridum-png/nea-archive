@@ -48,6 +48,8 @@ class Pawn(Piece):
                 elif target.getColour() != self.getColour() and target.getColour() != ' ':
                     if target_index == working_index - 7 or target_index == working_index - 9:
                         valid = True
+        # Check for en passant
+        
         if valid:
             self.__moved = True
         return valid

@@ -4,6 +4,7 @@ class Board:
     def __init__(self):
         self.board = []
         self.turn = 'w'
+        self.move_count = 1
 
     def loadFromFen(self, fen='rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'):
         piece_type_from_symbol = {'k': King, 'q': Queen, 'r': Rook, 'b': Bishop, 'n': Knight, 'p': Pawn}
@@ -52,9 +53,11 @@ class Board:
         target = self.board[target_index]
 
         if working.isValid(working, target, working_index, target_index, self.turn):
+            self.log(end, target)
             self.board[target_index] = working
             self.board[working_index] = Empty()
             self.turn = 'b' if self.turn == 'w' else 'w'
+            self.move_count += 1 if self.turn == 'b' else 0
         else:
             print("Invalid move")
 
@@ -66,6 +69,14 @@ class Board:
             return '    '
         else:
             return piece.getColour() + piece.getType()
+
+    def log(self, end: tuple, target) -> None:
+        # Write to a file in the format of PGN
+        with open(r'/Users/edwardbaker/Documents/nea/chess/output/log.log', 'a+') as log:
+            if self.turn == 'w':
+                log.write(f"{self.move_count}. {target.getType() if target.getType() != 'P' else ''}{chr(end[1]+97)}{end[0]+1} ")
+            else:
+                log.write(f"{target.getType() if target.getType() != 'P' else ''}{chr(end[1]+97)}{end[0]+1}" + "\n")
 
 if __name__ == '__main__':
     print("File run incorrectly - please run game.py instead")
