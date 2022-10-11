@@ -5,14 +5,14 @@ class Board:
     def __init__(self):
         # Create board with following structure, with each piece being an instance of the Piece class
         """
-        ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR']
-        ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP']
-        ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  ']
-        ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  ']
-        ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  ']
-        ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  ']
-        ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP']
         ['BR', 'BN', 'BB', 'BK', 'BQ', 'BB', 'BN', 'BR']
+        ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP']
+        ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  ']
+        ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  ']
+        ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  ']
+        ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  ']
+        ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP']
+        ['WR', 'WN', 'WB', 'WK', 'WQ', 'WB', 'WN', 'WR']
         """
 
         order = ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
@@ -141,7 +141,6 @@ TODO
 
  - Add castling
  - Add promoting
- - Add en passant
 
  - Add checking of insufficient material
  - Add checking of 50-move rule
