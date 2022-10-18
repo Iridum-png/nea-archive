@@ -169,20 +169,8 @@ class King(Piece):
 
     def isValid(self, working: Piece, target: Piece, working_index: int, target_index: int, turn: str) -> bool:
         if Piece.colourCheck(self, working, target, turn):
-            if abs(working_index - target_index) in [15, 1, 17, 9, 7, 8, 16, 24] and target_index != working_index:
-                return True
-        return False
-
-    def getType(self):
-        return 'K'
-
-class Empty(Piece):
-    def __init__(self):
-        Piece.__init__(self, ' ')
-        self.__type = ' '
-
-    def isValid(self, working: Piece, target: Piece, working_index: int, target_index: int, turn: str) -> bool:
-        return False
+            if abs(working_index - target_index) in [15, 1, 17, 9, 7, 8, 16, 24]:
+                return False
 
     def getType(self):
         return ' '

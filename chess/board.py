@@ -52,7 +52,8 @@ class Board:
         target_index = end[0]*8 + end[1]
         target = self.board[target_index]
 
-        if working.isValid(working, target, working_index, target_index, self.turn):
+        check =  working.isValid(working, target, working_index, target_index, self.turn, self.board)
+        if check[0]:
             self.log(end, target)
             self.board[target_index] = working
             self.board[working_index] = Empty()
@@ -60,6 +61,8 @@ class Board:
             self.move_count += 1 if self.turn == 'b' else 0
         else:
             print("Invalid move")
+        if check[1]:
+            self.board = check[1]
 
     def isWon(self):
         return False

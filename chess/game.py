@@ -8,13 +8,13 @@ def resetTurn(board) -> None:
 
 def turn(board) -> bool:
     valid_letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
-    start = first = input("Enter start position (eg a1): ")
+    start = input("Enter start position (eg a1): ")
     try:
         if start[0] in valid_letters:
             start = process(start)
         else:
             resetTurn(board)
-        end = target = input("Enter end position (eg h8): ")
+        end = input("Enter end position (eg h8): ")
         if end[0] in valid_letters:
             end = process(end)
         else:
@@ -41,7 +41,6 @@ def main():
 
 if __name__ == '__main__':
     from board import Board
-    from piece import Piece
 
     main()
 else:
