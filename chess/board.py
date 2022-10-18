@@ -10,7 +10,7 @@ class Board:
         piece_type_from_symbol = {'k': King, 'q': Queen, 'r': Rook, 'b': Bishop, 'n': Knight, 'p': Pawn}
         
         fen_board = fen.split(' ')[0][::-1].split('/')
-        print(fen_board)
+        
         for rows in fen_board:
             for symbol in rows[::-1]:
                 if symbol.isdigit():
@@ -39,13 +39,6 @@ class Board:
             row_num -= 1
         print(f"  a  b  c  d  e  f  g  h\t{self.turn.upper()}'s turn")
 
-    def debugPrint(self):
-        for i in range(8):
-            for j in range(8):
-                current = self.board[i*8 + j]
-                print(self.outputPiece(current), self.board.index(current), end=" ")
-        print()
-
     def move(self, start: tuple, end: tuple):
         working_index = start[0]*8 + start[1]
         working = self.board[working_index]
@@ -66,12 +59,6 @@ class Board:
 
     def isWon(self):
         return False
-
-    def outputPiece(self, piece: Piece) -> str:
-        if piece == '    ':
-            return '    '
-        else:
-            return piece.getColour() + piece.getType()
 
     def log(self, end: tuple, target) -> None:
         # Write to a file in the format of PGN

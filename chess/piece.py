@@ -1,14 +1,14 @@
 class Piece:
     def __init__(self, colour: str):
         self.__type = ' '
-        self._colour = colour
+        self.__colour = colour
 
     def isColour(self, colour: str) -> bool:
-        return self._colour == colour
+        return self.__colour == colour
 
     def getColour(self) -> str:
-        if self._colour:
-            return self._colour.upper()
+        if self.__colour:
+            return self.__colour.upper()
         return ' '
 
     def getType(self):
@@ -32,7 +32,7 @@ class Pawn(Piece):
     def isValid(self, working: Piece, target: Piece, working_index: int, target_index: int, turn: str) -> bool: # TODO en passant
         valid = False
         if Piece.colourCheck(self, working, target, turn):
-            if self._colour == 'w':
+            if self.__colour == 'w':
                 if target_index == working_index + 16 and self.__moved == False and target.getType() == ' ':
                     valid = True
                 elif target_index == working_index + 8 and target.getType() == ' ':
