@@ -26,7 +26,7 @@ def turn(board) -> bool:
     return board.isWon()
 
 def main():
-    with open(r'/Users/edwardbaker/Documents/nea/chess/output/log.log', 'w') as f:
+    with open(r'log.log', 'w') as f:
         pass
 
     board = Board()
