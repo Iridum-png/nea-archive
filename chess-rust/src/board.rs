@@ -5,12 +5,35 @@ pub struct Board {
 }
 
 impl Board {
-    pub fn printBoard(board: Board) {
-        let mut value = 0;
+    pub fn load_from_fen(&self, fen: String) -> Vec<i32> {
+        // Parse FEN string
+        let binding = fen
+            .split_whitespace()
+            .nth(0)
+            .unwrap()
+            .chars()
+            .rev()
+            .collect::<String>();
+        // Return vec of all numbers 0 to 63
+        (0..64).collect::<Vec<i32>>()
+    }
 
-        while value != 64 {
-            println!("{}, {}", board.board[value], value);
-            value += 1;
+    pub fn print_board(&self) {
+        println!(" +--+--+--+--+--+--+--+--+");
+        let mut row_num = 8;
+        for i in (0..8).rev() {
+            print!("{}|", row_num);
+            for j in 0..8 {
+                println!("{:?}", self.board);
+                let current = self.board[i * 8 + j];
+                match current {
+                    0 => print!("  |"),
+                    _ => print!("{}|", current),
+                }
+            }
+            println!("\n +--+--+--+--+--+--+--+--+");
+            row_num -= 1;
         }
+        println!("  a  b  c  d  e  f  g  h\t{}'s turn", self.turn);
     }
 }

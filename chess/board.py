@@ -10,7 +10,7 @@ class Board:
         piece_type_from_symbol = {'k': King, 'q': Queen, 'r': Rook, 'b': Bishop, 'n': Knight, 'p': Pawn}
         
         fen_board = fen.split(' ')[0][::-1].split('/')
-
+        print(fen_board)
         for rows in fen_board:
             for symbol in rows[::-1]:
                 if symbol.isdigit():
@@ -23,8 +23,8 @@ class Board:
         self.turn = fen.split(' ')[1]
 
     def printBoard(self):
-        from os import system, name
-        system('cls' if name == 'nt' else 'clear')
+        # from os import system, name
+        # system('cls' if name == 'nt' else 'clear')
         print(" +--+--+--+--+--+--+--+--+")
         row_num = 8
         for i in range(7, -1, -1):

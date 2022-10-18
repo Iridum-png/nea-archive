@@ -178,5 +178,16 @@ class King(Piece):
     def getColour(self):
         return ' '
 
+class Empty(Piece):
+    def __init__(self):
+        Piece.__init__(self, ' ')
+        self.__type = ' '
+
+    def getType(self):
+        return ' '
+
+    def getColour(self):
+        return ' '
+
 if __name__ == '__main__':
     print("File run incorrectly - please run game.py instead")
