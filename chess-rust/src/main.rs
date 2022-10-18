@@ -1,10 +1,13 @@
-use board::Board;
-use std::{fs::File, io};
-mod board;
+use ascii_converter::string_to_decimals;
+use asset::{board, Board};
+use std::io;
+mod asset;
 
 fn process<'a>(coordinate: (&'a str, &'a str)) -> (i32, i32) {
-    let mut coord1: i32 = coordinate.1.parse().unwrap();
-    let mut coord2: i32 = coordinate.0.parse().unwrap();
+    // TODO - fix the damn function that doesn't work for some reason
+    println!("{} {}", coordinate.0, coordinate.1);
+    let coord1: i32 = coordinate.1.parse().unwrap();
+    let coord2: i32 = string_to_decimals(coordinate.0).unwrap()[0] as i32;
     return (coord1 - 1, coord2 - 97);
 }
 
@@ -28,7 +31,7 @@ fn turn(board: &board::Board) -> bool {
         reset_turn(board);
     }
     // Convert the input into useable coordinates
-    let start_pos = process(start.split_at(0));
+    let start_pos = process(start.split_at(1));
 
     // Take the input for starting position
     println!("Enter end position (e.g. h8): ");
@@ -49,20 +52,19 @@ fn turn(board: &board::Board) -> bool {
 }
 
 fn main() {
-    let _log = File::create("log.log");
+    // let log = File::create("log.log");
 
-    let board = self::board::Board {
+    let mut board = self::board::Board {
         board: vec![],
         turn: 'w',
         move_count: 0,
     };
 
     board::Board::load_from_fen(
-        &board,
+        &mut board,
         "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1".to_string(),
     );
-
-    let mut won = turn(&board);
+    let mut won = false;
 
     while !won {
         self::board::Board::print_board(&board);
