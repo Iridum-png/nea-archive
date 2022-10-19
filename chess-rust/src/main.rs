@@ -3,10 +3,9 @@ use asset::{board, Board};
 use std::io;
 mod asset;
 
-fn process<'a>(coordinate: Vec<&'a str>) -> (i32, i32) {
-    println!("{} {}", coordinate[0], coordinate[1]);
-    let coord1: i32 = coordinate[1].parse().unwrap();
-    let coord2: i32 = string_to_decimals(&coordinate[0].to_string()).unwrap()[0] as i32;
+fn process<'a>(coordinate: (&'a str, &'a str)) -> (i32, i32) {
+    let coord1: i32 = coordinate.1.parse().unwrap();
+    let coord2: i32 = string_to_decimals(&coordinate.0.to_string()).unwrap()[0] as i32;
     return (coord1 - 1, coord2 - 97);
 }
 
@@ -30,7 +29,7 @@ fn turn(board: &board::Board) -> bool {
         reset_turn(board);
     }
     // Convert the input into useable coordinates
-    let start_pos = process(start.split(char::is_numeric).collect::<Vec<&str>>());
+    let start_pos = process(start.strip_suffix("\n").unwrap().split_at(1));
 
     // Take the input for starting position
     println!("Enter end position (e.g. h8): ");
@@ -44,7 +43,7 @@ fn turn(board: &board::Board) -> bool {
         reset_turn(board);
     }
     // Convert the input into useable coordinates
-    let end_pos = process(end.split(char::is_numeric).collect::<Vec<&str>>());
+    let end_pos = process(end.strip_suffix("\n").unwrap().split_at(1));
 
     board::Board::r#move(&board, start_pos, end_pos);
     return board::Board::is_won(&board);
