@@ -1,1 +1,4 @@
 temp.py
+/chess-rust/target
+/chess-rust/Cargo.lock
+/chess/__pycache__
