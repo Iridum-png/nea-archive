@@ -46,7 +46,7 @@ class Board:
         target = self.board[target_index]
 
         check =  working.isValid(working, target, working_index, target_index, self.turn, self.board)
-        if check[0]:
+        if check:
             self.log(end, target)
             self.board[target_index] = working
             self.board[working_index] = Empty()

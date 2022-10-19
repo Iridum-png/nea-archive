@@ -56,8 +56,22 @@ impl Board {
         );
     }
 
-    pub fn r#move(&self, start: (i32, i32), end: (i32, i32)) {
-        println!("Moving from {:?} to {:?}", start, end);
+    pub fn r#move(&mut self, start: (i32, i32), end: (i32, i32)) {
+        let working_index = (start.0 * 8 + start.1) as usize;
+        let working = self.board[working_index];
+        let target_index = (end.0 * 8 + end.1) as usize;
+
+        let check = Piece::is_valid(&working_index, &target_index, &self.turn, &self.board);
+        if check {
+            self.board[target_index] = working;
+            self.board[working_index] = Piece::new(' ', ' ');
+            self.turn = if self.turn == 'w' { 'b' } else { 'w' };
+            if self.turn == 'w' {
+                self.move_count += 1;
+            }
+        } else {
+            println!("Invalid move");
+        }
     }
 
     pub fn is_won(&self) -> bool {

@@ -9,12 +9,12 @@ fn process<'a>(coordinate: (&'a str, &'a str)) -> (i32, i32) {
     return (coord1 - 1, coord2 - 97);
 }
 
-fn reset_turn(board: &Board) {
+fn reset_turn(board: &mut Board) {
     board::Board::print_board(&board);
     turn(board);
 }
 
-fn turn(board: &board::Board) -> bool {
+fn turn(board: &mut board::Board) -> bool {
     let valid_letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
 
     // Take the input for starting position
@@ -45,7 +45,7 @@ fn turn(board: &board::Board) -> bool {
     // Convert the input into useable coordinates
     let end_pos = process(end.strip_suffix("\n").unwrap().split_at(1));
 
-    board::Board::r#move(&board, start_pos, end_pos);
+    board::Board::r#move(board, start_pos, end_pos);
     return board::Board::is_won(&board);
 }
 
@@ -66,6 +66,6 @@ fn main() {
 
     while !won {
         self::board::Board::print_board(&board);
-        won = turn(&board);
+        won = turn(&mut board);
     }
 }
