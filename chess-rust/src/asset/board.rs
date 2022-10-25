@@ -1,9 +1,7 @@
-// Use piece
-use crate::asset::piece::new_piece;
 use crate::asset::piece::Piece;
 
 pub struct Board {
-    pub board: Vec<Box<dyn Piece>>,
+    pub board: Vec<Piece>,
     pub turn: char,
     pub move_count: u8,
 }
@@ -23,11 +21,11 @@ impl Board {
             for piece in row.chars() {
                 if piece.is_numeric() {
                     for _ in 0..piece.to_digit(10).unwrap() {
-                        self.board.push(new_piece(' ', ' '));
+                        self.board.push(Piece::new_piece(' ', ' '));
                     }
                 } else {
-                    let colour = if piece.is_uppercase() { 'w' } else { 'b' };
-                    let working = new_piece(piece, colour);
+                    let colour = if piece.is_uppercase() { 'W' } else { 'B' };
+                    let working = Piece::new_piece(piece.to_ascii_uppercase(), colour);
                     self.board.push(working);
                 }
             }
@@ -42,7 +40,11 @@ impl Board {
             print!("{}|", row_num);
             for j in 0..8 {
                 let working = &self.board[(i * 8) + j];
-                print!("{}{}|", working.get_colour(), working.get_type());
+                print!(
+                    "{}{}|",
+                    Piece::get_colour(&working),
+                    Piece::get_type(&working)
+                );
             }
             println!("\n +--+--+--+--+--+--+--+--+");
             row_num -= 1;
@@ -55,31 +57,22 @@ impl Board {
 
     pub fn r#move(&mut self, start: (i32, i32), end: (i32, i32)) {
         let working_index = (start.0 * 8 + start.1) as usize;
-        let working: &Box<dyn Piece> = &self.board[working_index];
+        let working = &self.board[working_index];
         let target_index = (end.0 * 8 + end.1) as usize;
-
         // Check if move is valid
-        if working.is_valid(working_index, target_index, self.turn, &self.board) {
-            self.board = move_me(self.board, working_index, target_index);
-            self.board[working_index] = new_piece(' ', ' ');
-            self.turn = if self.turn == 'w' { 'b' } else { 'w' };
-            if self.turn == 'w' {
-                self.move_count += 1;
-            }
-        } else {
-            println!("Invalid move");
+        if !Piece::is_valid(working, working_index, target_index, self.turn, &self.board) {
+            println!("Error: invalid move");
+            return;
         }
+
+        // Move the piece
+        self.board[target_index] =
+            Piece::new_piece(Piece::get_type(working), Piece::get_colour(working));
+        self.board[working_index] = Piece::new_piece(' ', ' ');
+        self.turn = if self.turn == 'W' { 'B' } else { 'W' };
     }
 
     pub fn is_won(&self) -> bool {
         false
-    }
-}
-
-fn move_me(mut arr: [Box<dyn Piece>], old_index: usize, new_index: usize) -> Vec<Box<dyn Piece>> {
-    if old_index < new_index {
-        arr[old_index..=new_index].rotate_left(1);
-    } else {
-        arr[new_index..=old_index].rotate_right(1);
     }
 }

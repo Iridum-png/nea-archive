@@ -4,8 +4,9 @@ use std::io;
 mod asset;
 
 fn process<'a>(coordinate: (&'a str, &'a str)) -> (i32, i32) {
-    let coord1: i32 = coordinate.1.parse().unwrap();
-    let coord2: i32 = string_to_decimals(&coordinate.0.to_string()).unwrap()[0] as i32;
+    let coord1: i32 = coordinate.1.trim().parse().unwrap();
+    let coord2: i32 =
+        string_to_decimals(&coordinate.0.to_string().to_ascii_lowercase()).unwrap()[0] as i32;
     return (coord1 - 1, coord2 - 97);
 }
 
@@ -14,15 +15,12 @@ fn reset_turn(board: &mut Board) {
     turn(board);
 }
 
-fn turn(board: &mut board::Board) -> bool {
+fn turn(board: &mut Board) -> bool {
     let valid_letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
 
     // Take the input for starting position
     println!("Enter start position (e.g. a1): ");
-    let mut start = String::new();
-    io::stdin()
-        .read_line(&mut start)
-        .expect("Error: unable to read user input");
+    let start = input();
     // Check if the first character of start is in valid_letters
     if !valid_letters.contains(&start.chars().nth(0).unwrap()) {
         println!("Error: invalid start position");
@@ -33,10 +31,7 @@ fn turn(board: &mut board::Board) -> bool {
 
     // Take the input for starting position
     println!("Enter end position (e.g. h8): ");
-    let mut end = String::new();
-    io::stdin()
-        .read_line(&mut end)
-        .expect("Error: unable to read user input");
+    let end = input();
     // Check if the first character of start is in valid_letters
     if !valid_letters.contains(&end.chars().nth(0).unwrap()) {
         println!("Error: invalid start position");
@@ -46,7 +41,15 @@ fn turn(board: &mut board::Board) -> bool {
     let end_pos = process(end.strip_suffix("\n").unwrap().split_at(1));
 
     board::Board::r#move(board, start_pos, end_pos);
-    return board::Board::is_won(&board);
+    return board::Board::is_won(board);
+}
+
+fn input() -> String {
+    let mut input = String::new();
+    io::stdin()
+        .read_line(&mut input)
+        .expect("Error: unable to read user input");
+    return input;
 }
 
 fn main() {
@@ -57,11 +60,8 @@ fn main() {
         turn: 'w',
         move_count: 0,
     };
-
-    board::Board::load_from_fen(
-        &mut board,
-        "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1".to_string(),
-    );
+    println!("Enter FEN string: ");
+    board::Board::load_from_fen(&mut board, input());
     let mut won = false;
 
     while !won {

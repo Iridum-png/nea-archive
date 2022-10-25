@@ -1,435 +1,227 @@
 pub enum Piece {
-    Pawn(Data, bool),
-    Rook(Data, bool),
-    Knight(Data),
-    Bishop(Data),
-    Queen(Data),
-    King(Data, bool),
-    Empty(Data),
+    Pawn(char, bool),
+    Rook(char, bool),
+    Knight(char),
+    Bishop(char),
+    Queen(char),
+    King(char, bool),
+    Empty(char),
 }
 
 impl Piece {
-    fn is_valid(&self, start: usize, end: usize, turn: char, board: &Vec<Piece>) -> bool {
-        self.is_valid(start, end, turn, board)
+    pub fn is_valid(
+        piece: &Piece,
+        start: usize,
+        end: usize,
+        turn: char,
+        board: &Vec<Piece>,
+    ) -> bool {
+        match piece {
+            Piece::Pawn(..) => is_valid_pawn(start, end, turn),
+            Piece::Rook(..) => is_valid_rook(start, end, board),
+            Piece::Knight(..) => is_valid_knight(start, end),
+            Piece::Bishop(..) => is_valid_bishop(start, end, board),
+            Piece::Queen(..) => is_valid_queen(start, end, board),
+            Piece::King(..) => is_valid_king(start, end),
+            Piece::Empty(..) => false,
+        }
     }
 
-    fn get_type(&self) -> char {
-        self.get_type()
+    pub fn get_type(piece: &Piece) -> char {
+        match piece {
+            Piece::Pawn(..) => 'P',
+            Piece::Rook(..) => 'R',
+            Piece::Knight(..) => 'N',
+            Piece::Bishop(..) => 'B',
+            Piece::Queen(..) => 'Q',
+            Piece::King(..) => 'K',
+            Piece::Empty(..) => ' ',
+        }
     }
 
-    fn get_colour(&self) -> char {
-        self.get_colour()
+    pub fn get_colour(piece: &Piece) -> char {
+        match piece {
+            Piece::Pawn(colour, _) => *colour,
+            Piece::Rook(colour, _) => *colour,
+            Piece::Knight(colour) => *colour,
+            Piece::Bishop(colour) => *colour,
+            Piece::Queen(colour) => *colour,
+            Piece::King(colour, _) => *colour,
+            Piece::Empty(colour) => *colour,
+        }
     }
 
     pub fn new_piece(piece: char, colour: char) -> Piece {
         match piece {
-            'P' => Pawn::new(colour),
-            'R' => Rook::new(colour),
-            'N' => Knight::new(colour),
-            'B' => Bishop::new(colour),
-            'Q' => Queen::new(colour),
-            'K' => King::new(colour),
-            ' ' => Empty::new(),
+            'P' => Piece::Pawn(colour, false),
+            'R' => Piece::Rook(colour, false),
+            'N' => Piece::Knight(colour),
+            'B' => Piece::Bishop(colour),
+            'Q' => Piece::Queen(colour),
+            'K' => Piece::King(colour, false),
+            ' ' => Piece::Empty(colour),
             _ => panic!("Invalid piece"),
         }
     }
 }
 
-#[derive(Clone)]
-struct Data {
-    piece: char,
-    colour: char,
-}
+fn is_valid_pawn(start: usize, end: usize, turn: char) -> bool {
+    let start_row = start / 8;
+    let start_col = start % 8;
+    let end_row = end / 8;
+    let end_col = end % 8;
 
-struct Pawn {
-    data: Data,
-    moved: bool,
-}
-
-impl Pawn {
-    fn new(colour: char) -> Piece {
-        Piece::Pawn(Data { piece: 'P', colour }, false)
+    // Check if move is valid
+    if turn == 'W' {
+        if start_row == 6 {
+            if end_row == 4 && start_col == end_col {
+                return true;
+            }
+        }
+        if end_row == start_row - 1 && start_col == end_col {
+            return true;
+        }
+    } else {
+        if start_row == 1 {
+            if end_row == 3 && start_col == end_col {
+                return true;
+            }
+        }
+        if end_row == start_row + 1 && start_col == end_col {
+            return true;
+        }
     }
 
-    fn is_valid(
-        &self,
-        working_index: usize,
-        target_index: usize,
-        turn: char,
-        _board: &[Piece],
-    ) -> bool {
-        let working_row = working_index / 8;
-        let working_col = working_index % 8;
-        let target_row = target_index / 8;
-        let target_col = target_index % 8;
+    // Allow for diagonal capture
+    if turn == 'W' {
+        if (end_row == start_row - 1 && (end_col == start_col + 1 || end_col == start_col - 1) && ) {
+            return true;
+        }
+    } else {
+        if (end_row == start_row + 1 && (end_col == start_col + 1 || end_col == start_col - 1) && ) {
+            return true;
+        }
+    }
+    false
+}
 
-        let mut valid = false;
+fn is_valid_rook(start: usize, end: usize, board: &Vec<Piece>) -> bool {
+    let start_row = start / 8;
+    let start_col = start % 8;
+    let end_row = end / 8;
+    let end_col = end % 8;
 
-        if self.is_colour(turn) {
-            if self.is_colour('W') {
-                if working_row == 1 {
-                    if target_row == 3 && target_col == working_col {
-                        valid = true;
-                    }
-                } else if target_row == working_row + 1 && target_col == working_col {
-                    valid = true;
+    // Check if move is valid
+    if !start_row == end_row || start_col == end_col {
+        return false;
+    }
+
+    // Check if piece is in way
+    if start_row == end_row {
+        if start_col < end_col {
+            for i in start_col + 1..end_col {
+                if Piece::get_type(&board[start_row * 8 + i]) != ' ' {
+                    return false;
                 }
-            } else {
-                if working_row == 6 {
-                    if target_row == 4 && target_col == working_col {
-                        valid = true;
-                    }
-                } else if target_row == working_row - 1 && target_col == working_col {
-                    valid = true;
+            }
+        } else {
+            for i in end_col + 1..start_col {
+                if Piece::get_type(&board[start_row * 8 + i]) != ' ' {
+                    return false;
                 }
             }
         }
-
-        valid
-    }
-
-    fn is_colour(&self, colour: char) -> bool {
-        self.get_colour() == colour
-    }
-
-    fn get_colour(&self) -> char {
-        self.data.colour
-    }
-}
-
-struct Rook {
-    data: Data,
-    moved: bool,
-}
-
-impl Rook {
-    fn new(colour: char) -> Piece {
-        Piece::Rook(Data { piece: 'R', colour }, false)
-    }
-
-    fn is_valid(
-        &self,
-        working_index: usize,
-        target_index: usize,
-        turn: char,
-        board: &[Piece],
-    ) -> bool {
-        let working_row = working_index / 8;
-        let working_col = working_index % 8;
-        let target_row = target_index / 8;
-        let target_col = target_index % 8;
-
-        let mut valid = false;
-
-        if self.is_colour(turn) {
-            if working_row == target_row {
-                valid = true;
-            } else if working_col == target_col {
-                valid = true;
+    } else {
+        if start_row < end_row {
+            for i in start_row + 1..end_row {
+                if Piece::get_type(&board[i * 8 + start_col]) != ' ' {
+                    return false;
+                }
             }
-        }
-
-        // Check if piece is in way
-        if valid {
-            if working_row == target_row {
-                let mut min = working_col;
-                let mut max = target_col;
-
-                if min > max {
-                    min = target_col;
-                    max = working_col;
-                }
-
-                for i in min..max {
-                    if board[i + working_row * 8].get_type() != ' ' {
-                        valid = false;
-                    }
-                }
-            } else if working_col == target_col {
-                let mut min = working_row;
-                let mut max = target_row;
-
-                if min > max {
-                    min = target_row;
-                    max = working_row;
-                }
-
-                for i in min..max {
-                    if board[working_col + i * 8].get_type() != ' ' {
-                        valid = false;
-                    }
+        } else {
+            for i in end_row + 1..start_row {
+                if Piece::get_type(&board[i * 8 + start_col]) != ' ' {
+                    return false;
                 }
             }
         }
-
-        valid
     }
-
-    fn is_colour(&self, colour: char) -> bool {
-        self.get_colour() == colour
-    }
-
-    fn get_colour(&self) -> char {
-        self.data.colour
-    }
+    return true;
 }
 
-struct Knight {
-    data: Data,
+fn is_valid_knight(start: usize, end: usize) -> bool {
+    let start_row = start / 8;
+    let start_col = start % 8;
+    let end_row = end / 8;
+    let end_col = end % 8;
+
+    // Check if move is valid
+    if start_row.abs_diff(end_row) == 2 && start_col.abs_diff(end_col) == 1 {
+        return true;
+    }
+    if start_row.abs_diff(end_row) == 1 && start_col.abs_diff(end_col) == 2 {
+        return true;
+    }
+    return false;
 }
 
-impl Knight {
-    fn new(colour: char) -> Piece {
-        Piece::Knight(Data { piece: 'N', colour })
+fn is_valid_bishop(start: usize, end: usize, board: &Vec<Piece>) -> bool {
+    let start_row = start / 8;
+    let start_col = start % 8;
+    let end_row = end / 8;
+    let end_col = end % 8;
+
+    // Check if move is valid
+    if start_row.abs_diff(end_row) != start_col.abs_diff(end_col) {
+        return false;
     }
 
-    fn is_valid(
-        &self,
-        working_index: usize,
-        target_index: usize,
-        turn: char,
-        _board: &[Piece],
-    ) -> bool {
-        let working_row = working_index / 8;
-        let working_col = working_index % 8;
-        let target_row = target_index / 8;
-        let target_col = target_index % 8;
-
-        let mut valid = false;
-
-        if self.is_colour(turn) {
-            if (working_row - target_row) == 2 && (working_col - target_col) == 1 {
-                valid = true;
-            } else if (working_row - target_row) == 1 && (working_col - target_col) == 2 {
-                valid = true;
+    // Check if piece is in way
+    if start_row < end_row {
+        if start_col < end_col {
+            for i in 1..end_row - start_row {
+                if Piece::get_type(&board[(start_row + i) * 8 + start_col + i]) != ' ' {
+                    return false;
+                }
             }
-        }
-
-        valid
-    }
-
-    fn is_colour(&self, colour: char) -> bool {
-        self.get_colour() == colour
-    }
-
-    fn get_colour(&self) -> char {
-        self.data.colour
-    }
-}
-
-struct Bishop {
-    data: Data,
-}
-
-impl Bishop {
-    fn new(colour: char) -> Piece {
-        Piece::Bishop(Data { piece: 'B', colour })
-    }
-
-    fn is_valid(
-        &self,
-        working_index: usize,
-        target_index: usize,
-        turn: char,
-        board: &[Piece],
-    ) -> bool {
-        let working_row = working_index / 8;
-        let working_col = working_index % 8;
-        let target_row = target_index / 8;
-        let target_col = target_index % 8;
-
-        let mut valid = false;
-
-        if self.is_colour(turn) {
-            if (working_row - target_row) == (working_col - target_col) {
-                valid = true;
-            }
-        }
-
-        // Check if piece is in way
-        if valid {
-            let mut min_row = working_row;
-            let mut max_row = target_row;
-            let mut min_col = working_col;
-            let max_col = target_col;
-
-            if min_row > max_row {
-                min_row = target_row;
-                max_row = working_row;
-            }
-
-            if min_col > max_col {
-                min_col = target_col;
-            }
-
-            for i in 1..(max_row - min_row) {
-                if board[(min_col + i) + (min_row + i) * 8].get_type() != ' ' {
-                    valid = false;
+        } else {
+            for i in 1..end_row - start_row {
+                if Piece::get_type(&board[(start_row + i) * 8 + start_col - i]) != ' ' {
+                    return false;
                 }
             }
         }
-
-        valid
-    }
-
-    fn is_colour(&self, colour: char) -> bool {
-        self.get_colour() == colour
-    }
-
-    fn get_colour(&self) -> char {
-        self.data.colour
-    }
-}
-
-struct Queen {
-    data: Data,
-}
-
-impl Queen {
-    fn new(colour: char) -> Piece {
-        Piece::Queen(Data { piece: 'Q', colour })
-    }
-
-    fn is_valid(
-        &self,
-        working_index: usize,
-        target_index: usize,
-        turn: char,
-        board: &[Piece],
-    ) -> bool {
-        let working_row = working_index / 8;
-        let working_col = working_index % 8;
-        let target_row = target_index / 8;
-        let target_col = target_index % 8;
-
-        let mut valid = false;
-
-        if self.is_colour(turn) {
-            if working_row == target_row {
-                valid = true;
-            } else if working_col == target_col {
-                valid = true;
-            } else if (working_row - target_row) == (working_col - target_col) {
-                valid = true;
+    } else {
+        if start_col < end_col {
+            for i in 1..start_row - end_row {
+                if Piece::get_type(&board[(start_row - i) * 8 + start_col + i]) != ' ' {
+                    return false;
+                }
             }
-        }
-
-        // Check if piece is in way
-        if valid {
-            if working_row == target_row {
-                let mut min = working_col;
-                let mut max = target_col;
-
-                if min > max {
-                    min = target_col;
-                    max = working_col;
-                }
-
-                for i in min..max {
-                    if board[i + working_row * 8].get_type() != ' ' {
-                        valid = false;
-                    }
-                }
-            } else if working_col == target_col {
-                let mut min = working_row;
-                let mut max = target_row;
-
-                if min > max {
-                    min = target_row;
-                    max = working_row;
-                }
-
-                for i in min..max {
-                    if board[working_col + i * 8].get_type() != ' ' {
-                        valid = false;
-                    }
-                }
-            } else if (working_row - target_row) == (working_col - target_col) {
-                let mut min_row = working_row;
-                let mut max_row = target_row;
-                let mut min_col = working_col;
-                let max_col = target_col;
-
-                if min_row > max_row {
-                    min_row = target_row;
-                    max_row = working_row;
-                }
-
-                if min_col > max_col {
-                    min_col = target_col;
-                }
-
-                for i in 1..(max_row - min_row) {
-                    if board[(min_col + i) + (min_row + i) * 8].get_type() != ' ' {
-                        valid = false;
-                    }
+        } else {
+            for i in 1..start_row - end_row {
+                if Piece::get_type(&board[(start_row - i) * 8 + start_col - i]) != ' ' {
+                    return false;
                 }
             }
         }
-
-        valid
     }
-
-    fn is_colour(&self, colour: char) -> bool {
-        self.get_colour() == colour
-    }
-
-    fn get_colour(&self) -> char {
-        self.data.colour
-    }
+    return true;
 }
 
-struct King {
-    data: Data,
-    moved: bool,
+fn is_valid_queen(start: usize, end: usize, board: &Vec<Piece>) -> bool {
+    is_valid_rook(start, end, board) || is_valid_bishop(start, end, board)
 }
 
-impl King {
-    fn new(colour: char) -> Piece {
-        Piece::King(Data { piece: 'K', colour }, false)
+fn is_valid_king(start: usize, end: usize) -> bool {
+    let start_row = start / 8;
+    let start_col = start % 8;
+    let end_row = end / 8;
+    let end_col = end % 8;
+
+    // Check if move is valid
+    if start_row.abs_diff(end_row) <= 1 && start_col.abs_diff(end_col) <= 1 {
+        return true;
     }
-
-    fn is_valid(
-        &self,
-        working_index: usize,
-        target_index: usize,
-        turn: char,
-        _board: &[Piece],
-    ) -> bool {
-        let working_row = working_index / 8;
-        let working_col = working_index % 8;
-        let target_row = target_index / 8;
-        let target_col = target_index % 8;
-
-        let mut valid = false;
-
-        if self.is_colour(turn) {
-            if (working_row - target_row) <= 1 && (working_col - target_col) <= 1 {
-                valid = true;
-            }
-        }
-
-        valid
-    }
-
-    fn is_colour(&self, colour: char) -> bool {
-        self.get_colour() == colour
-    }
-
-    fn get_colour(&self) -> char {
-        self.data.colour
-    }
-}
-
-struct Empty {
-    data: Data,
-}
-
-impl Empty {
-    fn new() -> Piece {
-        Piece::Empty(Data {
-            piece: ' ',
-            colour: ' ',
-        })
-    }
+    return false;
 }
