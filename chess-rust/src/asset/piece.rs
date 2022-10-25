@@ -541,3 +541,4 @@ pub fn new_piece(piece: char, colour: char) -> Box<dyn Piece> {
         _ => panic!("Invalid piece"),
     }
 }
+// Comment

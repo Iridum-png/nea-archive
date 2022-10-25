@@ -82,5 +82,4 @@ fn move_me(mut arr: [Box<dyn Piece>], old_index: usize, new_index: usize) -> Vec
     } else {
         arr[new_index..=old_index].rotate_right(1);
     }
-    arr
 }
