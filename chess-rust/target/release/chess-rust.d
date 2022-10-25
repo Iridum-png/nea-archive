@@ -1,1 +1,0 @@
-C:\Users\ed9ba\Documents\Coding\NEA\nea\chess-rust\target\release\chess-rust.exe: C:\Users\ed9ba\Documents\Coding\NEA\nea\chess-rust\src\board.rs C:\Users\ed9ba\Documents\Coding\NEA\nea\chess-rust\src\main.rs
