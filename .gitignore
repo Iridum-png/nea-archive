@@ -5,3 +5,4 @@ temp.py
 .DS_Store
 /neural-net/__pycache__
 /chess/__pycache__
+chess-rust/target/CACHEDIR.TAG
