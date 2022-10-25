@@ -1,20 +1,37 @@
-pub trait Piece {
-    fn is_valid(
-        &self,
-        working_index: usize,
-        target_index: usize,
-        turn: char,
-        board: &[Box<dyn Piece>],
-    ) -> bool;
-    fn is_colour(&self, colour: char) -> bool;
-    fn get_colour(&self) -> char;
-    fn get_type(&self) -> char;
-    fn box_clone(&self) -> Box<dyn Piece>;
+pub enum Piece {
+    Pawn(Data, bool),
+    Rook(Data, bool),
+    Knight(Data),
+    Bishop(Data),
+    Queen(Data),
+    King(Data, bool),
+    Empty(Data),
 }
 
-impl Clone for Box<dyn Piece> {
-    fn clone(&self) -> Box<dyn Piece> {
-        self.box_clone()
+impl Piece {
+    fn is_valid(&self, start: usize, end: usize, turn: char, board: &Vec<Piece>) -> bool {
+        self.is_valid(start, end, turn, board)
+    }
+
+    fn get_type(&self) -> char {
+        self.get_type()
+    }
+
+    fn get_colour(&self) -> char {
+        self.get_colour()
+    }
+
+    pub fn new_piece(piece: char, colour: char) -> Piece {
+        match piece {
+            'P' => Pawn::new(colour),
+            'R' => Rook::new(colour),
+            'N' => Knight::new(colour),
+            'B' => Bishop::new(colour),
+            'Q' => Queen::new(colour),
+            'K' => King::new(colour),
+            ' ' => Empty::new(),
+            _ => panic!("Invalid piece"),
+        }
     }
 }
 
@@ -24,19 +41,22 @@ struct Data {
     colour: char,
 }
 
-#[derive(Clone)]
 struct Pawn {
     data: Data,
     moved: bool,
 }
 
-impl Piece for Pawn {
+impl Pawn {
+    fn new(colour: char) -> Piece {
+        Piece::Pawn(Data { piece: 'P', colour }, false)
+    }
+
     fn is_valid(
         &self,
         working_index: usize,
         target_index: usize,
         turn: char,
-        _board: &[Box<dyn Piece>],
+        _board: &[Piece],
     ) -> bool {
         let working_row = working_index / 8;
         let working_col = working_index % 8;
@@ -73,40 +93,26 @@ impl Piece for Pawn {
     }
 
     fn get_colour(&self) -> char {
-        self.data.colour.to_ascii_uppercase()
-    }
-
-    fn get_type(&self) -> char {
-        'P'
-    }
-
-    fn box_clone(&self) -> Box<dyn Piece> {
-        Box::new((*self).clone())
+        self.data.colour
     }
 }
 
-impl Pawn {
-    fn new(piece: char, colour: char) -> Pawn {
-        Pawn {
-            data: Data { piece, colour },
-            moved: false,
-        }
-    }
-}
-
-#[derive(Clone)]
 struct Rook {
     data: Data,
     moved: bool,
 }
 
-impl Piece for Rook {
+impl Rook {
+    fn new(colour: char) -> Piece {
+        Piece::Rook(Data { piece: 'R', colour }, false)
+    }
+
     fn is_valid(
         &self,
         working_index: usize,
         target_index: usize,
         turn: char,
-        board: &[Box<dyn Piece>],
+        board: &[Piece],
     ) -> bool {
         let working_row = working_index / 8;
         let working_col = working_index % 8;
@@ -164,39 +170,25 @@ impl Piece for Rook {
     }
 
     fn get_colour(&self) -> char {
-        self.data.colour.to_ascii_uppercase()
-    }
-
-    fn get_type(&self) -> char {
-        'R'
-    }
-
-    fn box_clone(&self) -> Box<dyn Piece> {
-        Box::new((*self).clone())
+        self.data.colour
     }
 }
 
-impl Rook {
-    fn new(piece: char, colour: char) -> Rook {
-        Rook {
-            data: Data { piece, colour },
-            moved: false,
-        }
-    }
-}
-
-#[derive(Clone)]
 struct Knight {
     data: Data,
 }
 
-impl Piece for Knight {
+impl Knight {
+    fn new(colour: char) -> Piece {
+        Piece::Knight(Data { piece: 'N', colour })
+    }
+
     fn is_valid(
         &self,
         working_index: usize,
         target_index: usize,
         turn: char,
-        _board: &[Box<dyn Piece>],
+        _board: &[Piece],
     ) -> bool {
         let working_row = working_index / 8;
         let working_col = working_index % 8;
@@ -221,38 +213,25 @@ impl Piece for Knight {
     }
 
     fn get_colour(&self) -> char {
-        self.data.colour.to_ascii_uppercase()
-    }
-
-    fn get_type(&self) -> char {
-        'N'
-    }
-
-    fn box_clone(&self) -> Box<dyn Piece> {
-        Box::new((*self).clone())
+        self.data.colour
     }
 }
 
-impl Knight {
-    fn new(piece: char, colour: char) -> Knight {
-        Knight {
-            data: Data { piece, colour },
-        }
-    }
-}
-
-#[derive(Clone)]
 struct Bishop {
     data: Data,
 }
 
-impl Piece for Bishop {
+impl Bishop {
+    fn new(colour: char) -> Piece {
+        Piece::Bishop(Data { piece: 'B', colour })
+    }
+
     fn is_valid(
         &self,
         working_index: usize,
         target_index: usize,
         turn: char,
-        board: &[Box<dyn Piece>],
+        board: &[Piece],
     ) -> bool {
         let working_row = working_index / 8;
         let working_col = working_index % 8;
@@ -298,38 +277,25 @@ impl Piece for Bishop {
     }
 
     fn get_colour(&self) -> char {
-        self.data.colour.to_ascii_uppercase()
-    }
-
-    fn get_type(&self) -> char {
-        'B'
-    }
-
-    fn box_clone(&self) -> Box<dyn Piece> {
-        Box::new((*self).clone())
+        self.data.colour
     }
 }
 
-impl Bishop {
-    fn new(piece: char, colour: char) -> Bishop {
-        Bishop {
-            data: Data { piece, colour },
-        }
-    }
-}
-
-#[derive(Clone)]
 struct Queen {
     data: Data,
 }
 
-impl Piece for Queen {
+impl Queen {
+    fn new(colour: char) -> Piece {
+        Piece::Queen(Data { piece: 'Q', colour })
+    }
+
     fn is_valid(
         &self,
         working_index: usize,
         target_index: usize,
         turn: char,
-        board: &[Box<dyn Piece>],
+        board: &[Piece],
     ) -> bool {
         let working_row = working_index / 8;
         let working_col = working_index % 8;
@@ -409,39 +375,26 @@ impl Piece for Queen {
     }
 
     fn get_colour(&self) -> char {
-        self.data.colour.to_ascii_uppercase()
-    }
-
-    fn get_type(&self) -> char {
-        'Q'
-    }
-
-    fn box_clone(&self) -> Box<dyn Piece> {
-        Box::new((*self).clone())
+        self.data.colour
     }
 }
 
-impl Queen {
-    fn new(piece: char, colour: char) -> Queen {
-        Queen {
-            data: Data { piece, colour },
-        }
-    }
-}
-
-#[derive(Clone)]
 struct King {
     data: Data,
     moved: bool,
 }
 
-impl Piece for King {
+impl King {
+    fn new(colour: char) -> Piece {
+        Piece::King(Data { piece: 'K', colour }, false)
+    }
+
     fn is_valid(
         &self,
         working_index: usize,
         target_index: usize,
         turn: char,
-        _board: &[Box<dyn Piece>],
+        _board: &[Piece],
     ) -> bool {
         let working_row = working_index / 8;
         let working_col = working_index % 8;
@@ -464,81 +417,19 @@ impl Piece for King {
     }
 
     fn get_colour(&self) -> char {
-        self.data.colour.to_ascii_uppercase()
-    }
-
-    fn get_type(&self) -> char {
-        'K'
-    }
-
-    fn box_clone(&self) -> Box<dyn Piece> {
-        Box::new((*self).clone())
+        self.data.colour
     }
 }
 
-impl King {
-    fn new(piece: char, colour: char) -> King {
-        King {
-            data: Data { piece, colour },
-            moved: false,
-        }
-    }
-}
-
-#[derive(Clone)]
 struct Empty {
     data: Data,
 }
 
-impl Piece for Empty {
-    fn is_valid(
-        &self,
-        _working_index: usize,
-        _target_index: usize,
-        _turn: char,
-        _board: &[Box<dyn Piece>],
-    ) -> bool {
-        false
-    }
-
-    fn is_colour(&self, _colour: char) -> bool {
-        false
-    }
-
-    fn get_colour(&self) -> char {
-        ' '
-    }
-
-    fn get_type(&self) -> char {
-        ' '
-    }
-
-    fn box_clone(&self) -> Box<dyn Piece> {
-        Box::new(self.clone())
-    }
-}
-
 impl Empty {
-    fn new() -> Empty {
-        Empty {
-            data: Data {
-                piece: ' ',
-                colour: ' ',
-            },
-        }
+    fn new() -> Piece {
+        Piece::Empty(Data {
+            piece: ' ',
+            colour: ' ',
+        })
     }
 }
-
-pub fn new_piece(piece: char, colour: char) -> Box<dyn Piece> {
-    match piece {
-        'P' => Box::new(Pawn::new(piece, colour)),
-        'R' => Box::new(Rook::new(piece, colour)),
-        'N' => Box::new(Knight::new(piece, colour)),
-        'B' => Box::new(Bishop::new(piece, colour)),
-        'Q' => Box::new(Queen::new(piece, colour)),
-        'K' => Box::new(King::new(piece, colour)),
-        ' ' => Box::new(Empty::new()),
-        _ => panic!("Invalid piece"),
-    }
-}
-// Comment
