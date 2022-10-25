@@ -19,7 +19,7 @@ def turn(board) -> bool:
             end = process(end)
         else:
             resetTurn(board)
-    except IndexError:
+    except:
         resetTurn(board)
 
     board.move(start, end)
