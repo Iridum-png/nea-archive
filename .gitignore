@@ -7,3 +7,4 @@ temp.py
 /chess/__pycache__
 chess-rust/target/CACHEDIR.TAG
 /.vscode/   
+/chess-rust-experimental
