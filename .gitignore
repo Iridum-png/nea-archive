@@ -1,10 +1,6 @@
 temp.py
-/chess-rust/target/
-/chess-rust/Cargo.lock
-/chess/__pycache__
+target
+*.lock
+*cache*
 .DS_Store
-/neural-net/__pycache__
-/chess/__pycache__
-chess-rust/target/CACHEDIR.TAG
-/.vscode/   
-/chess-rust-exp
+/.vscode/
