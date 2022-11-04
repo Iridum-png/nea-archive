@@ -9,5 +9,5 @@ mod asset;
 fn main() {
     let mut board = asset::Board::new();
     board.load_from_fen(None);
-    board.print();
+    board.print_board();
 }

@@ -3,12 +3,14 @@ use crate::asset::tile::Tile;
 
 pub struct Board {
     tiles: Vec<Option<Tile>>,
+    turn: char,
 }
 
 impl Board {
     pub fn new() -> Board {
         Board {
             tiles: std::iter::repeat_with(|| None).take(64).collect::<Vec<_>>(),
+            turn: 'W',
         }
     }
 
@@ -24,22 +26,43 @@ impl Board {
         println!("FEN: {}", fen);
         let mut i = 0;
         for c in fen.chars() {
+            if i >= 64 {
+                break;
+            }
             if c.is_digit(10) {
-                i += c.to_digit(10).unwrap();
+                for _ in 0..c.to_digit(10).unwrap() {
+                    self.tiles[i] = Some(Tile::new(i % 2 == 0, ' '));
+                    i += 1;
+                }
             } else {
-                self.tiles[i] = Tile::new(i % 2 == 0, c);
+                self.tiles[i as usize] = Some(Tile::new(i % 2 == 0, c));
                 i += 1;
             }
         }
+        self.turn = fen
+            .split_whitespace()
+            .nth(1)
+            .unwrap()
+            .chars()
+            .nth(0)
+            .unwrap();
     }
 
-    pub fn print(&self) {
-        for i in 0..64 {
-            if i % 8 == 0 {
-                println!();
+    pub fn print_board(&self) {
+        println!(" +--+--+--+--+--+--+--+--+");
+        let mut row_num = 8;
+        for i in (0..8).rev() {
+            print!("{}|", row_num);
+            for j in 0..8 {
+                let tile = self.tiles[(i * 8) + j].as_ref();
+                match tile {
+                    Some(tile) => print!("{}{}|", tile.get_colour(), tile.get_piece()),
+                    None => print!("  |"),
+                };
             }
-            print!("{}", self.tiles[i].to_string());
+            println!("\n +--+--+--+--+--+--+--+--+");
+            row_num -= 1;
         }
-        println!();
+        println!("  a  b  c  d  e  f  g  h\t{}'s turn", self.turn);
     }
 }
