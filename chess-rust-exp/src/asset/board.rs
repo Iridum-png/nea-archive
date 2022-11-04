@@ -15,31 +15,31 @@ impl Board {
     }
 
     pub fn load_from_fen(&mut self, fen: Option<&str>) {
-        let fen = fen
-            .unwrap_or("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+        let fen_unwrapped =
+            fen.unwrap_or("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+        let fen_layout = fen_unwrapped
             .split_whitespace()
             .nth(0)
             .unwrap()
             .chars()
             .rev()
             .collect::<String>();
-        println!("FEN: {}", fen);
         let mut i = 0;
-        for c in fen.chars() {
-            if i >= 64 {
-                break;
-            }
-            if c.is_digit(10) {
-                for _ in 0..c.to_digit(10).unwrap() {
-                    self.tiles[i] = Some(Tile::new(i % 2 == 0, ' '));
+        for row in fen_layout.split("/").collect::<Vec<&str>>() {
+            for piece in row.chars() {
+                if piece.is_numeric() {
+                    for _ in 0..piece.to_digit(10).unwrap() {
+                        self.tiles[i] = None;
+                        i += 1;
+                    }
+                } else {
+                    let colour = if piece.is_uppercase() { true } else { false };
+                    self.tiles[i] = Some(Tile::new(colour, piece.to_ascii_lowercase()));
                     i += 1;
                 }
-            } else {
-                self.tiles[i as usize] = Some(Tile::new(i % 2 == 0, c));
-                i += 1;
             }
         }
-        self.turn = fen
+        self.turn = fen_unwrapped
             .split_whitespace()
             .nth(1)
             .unwrap()
@@ -48,7 +48,7 @@ impl Board {
             .unwrap();
     }
 
-    pub fn print_board(&self) {
+    pub fn print_board(self) {
         println!(" +--+--+--+--+--+--+--+--+");
         let mut row_num = 8;
         for i in (0..8).rev() {
