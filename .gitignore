@@ -6,5 +6,4 @@ temp.py
 /neural-net/__pycache__
 /chess/__pycache__
 chess-rust/target/CACHEDIR.TAG
-/.vscode/   
-/chess-rust-exp
+/.vscode/

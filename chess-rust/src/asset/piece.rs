@@ -17,7 +17,7 @@ impl Piece {
         board: &Vec<Piece>,
     ) -> bool {
         match piece {
-            Piece::Pawn(..) => is_valid_pawn(start, end, turn),
+            Piece::Pawn(..) => is_valid_pawn(start, end, turn, board),
             Piece::Rook(..) => is_valid_rook(start, end, board),
             Piece::Knight(..) => is_valid_knight(start, end),
             Piece::Bishop(..) => is_valid_bishop(start, end, board),
@@ -65,14 +65,14 @@ impl Piece {
     }
 }
 
-fn is_valid_pawn(start: usize, end: usize, turn: char) -> bool {
+fn is_valid_pawn(start: usize, end: usize, turn: char, board: &Vec<Piece>) -> bool {
     let start_row = start / 8;
     let start_col = start % 8;
     let end_row = end / 8;
     let end_col = end % 8;
 
     // Check if move is valid
-    if turn == 'W' {
+    if turn == 'B' {
         if start_row == 6 {
             if end_row == 4 && start_col == end_col {
                 return true;
@@ -92,17 +92,22 @@ fn is_valid_pawn(start: usize, end: usize, turn: char) -> bool {
         }
     }
 
-    // Allow for diagonal capture
-    if turn == 'W' {
-        if (end_row == start_row - 1 && (end_col == start_col + 1 || end_col == start_col - 1) && ) {
-            return true;
-        }
-    } else {
-        if (end_row == start_row + 1 && (end_col == start_col + 1 || end_col == start_col - 1) && ) {
-            return true;
+    // Check if pawn is capturing
+    let target = &board[end];
+    let opposing = if turn == 'W' { 'B' } else { 'W' };
+    println!("{} {}", Piece::get_colour(target), opposing);
+    if Piece::get_colour(target) == opposing {
+        if turn == 'B' {
+            if end_row == start_row - 1 && (end_col == start_col - 1 || end_col == start_col + 1) {
+                return true;
+            }
+        } else {
+            if end_row == start_row + 1 && (end_col == start_col - 1 || end_col == start_col + 1) {
+                return true;
+            }
         }
     }
-    false
+    return false;
 }
 
 fn is_valid_rook(start: usize, end: usize, board: &Vec<Piece>) -> bool {
