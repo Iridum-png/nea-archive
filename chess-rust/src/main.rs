@@ -57,10 +57,12 @@ fn main() {
 
     let mut board = self::board::Board {
         board: vec![],
-        turn: 'w',
+        turn: 'W',
         move_count: 0,
     };
-    println!("Enter FEN string: ");
+    println!(
+        "Enter FEN string (Default: rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1): "
+    );
     board::Board::load_from_fen(&mut board, input());
     let mut won = false;
 

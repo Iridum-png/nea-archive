@@ -49,10 +49,7 @@ impl Board {
             println!("\n +--+--+--+--+--+--+--+--+");
             row_num -= 1;
         }
-        println!(
-            "  a  b  c  d  e  f  g  h\t{}'s turn",
-            self.turn.to_uppercase()
-        );
+        println!("  a  b  c  d  e  f  g  h\t{}'s turn", self.turn);
     }
 
     pub fn r#move(&mut self, start: (i32, i32), end: (i32, i32)) {
