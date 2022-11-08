@@ -22,13 +22,13 @@
 
 ## 📝 Table of Contents
 
-- [About](#about)
-- [Getting Started](#getting_started)
-- [Deployment](#deployment)
-- [Usage](#usage)
-- [Built Using](#built_using)
-- [TODO](../TODO.md)
-- [Acknowledgments](#acknowledgement)
+- (#About)
+- (#Getting-started)
+- (#Deployment)
+- (#Usage)
+- #(Built-using)
+- (TODO)
+- (#Useful-sources-of-information)
 
 ## 🧐 About
 
@@ -87,19 +87,19 @@ Explain what these tests test and why
 Give an example
 ```
 
-## 🎈 Usage `<a name="usage"></a>`
+## 🎈 Usage 
 
 Add notes about how to use the system.
 
-## 🚀 Deployment `<a name = "deployment"></a>`
+## 🚀 Deployment 
 
 Add additional notes about how to deploy this on a live system.
 
-## ⛏️ Built Using `<a name = "built_using"></a>`
+## ⛏️ Built Using 
 
 - Pure rust and python
 
-## 🎉 Useful sites `<a name = "Useful sites"></a>`
+## 🎉 Useful sources of information
 
 - [Chess Programming Wiki](https://www.chessprogramming.org/Main_Page)
 - [Sebastian Lague](https://github.com/SebLague)
