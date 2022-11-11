@@ -7,3 +7,4 @@ target
 /chess/__pycache__
 chess-rust/target/CACHEDIR.TAG
 /.vscode/
+rust-wasm
