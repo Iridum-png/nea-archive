@@ -1,4 +1,3 @@
-// Use the Tile struct from tile
 use crate::asset::tile::Tile;
 
 pub struct Board {
@@ -15,8 +14,7 @@ impl Board {
     }
 
     pub fn load_from_fen(&mut self, fen: Option<&str>) {
-        let fen_unwrapped =
-            fen.unwrap_or("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+        let fen_unwrapped = fen.unwrap();
         let fen_layout = fen_unwrapped
             .split_whitespace()
             .nth(0)
@@ -26,7 +24,7 @@ impl Board {
             .collect::<String>();
         let mut i = 0;
         for row in fen_layout.split("/").collect::<Vec<&str>>() {
-            for piece in row.chars() {
+            for piece in row.chars().rev() {
                 if piece.is_numeric() {
                     for _ in 0..piece.to_digit(10).unwrap() {
                         self.tiles[i] = None;
@@ -45,10 +43,11 @@ impl Board {
             .unwrap()
             .chars()
             .nth(0)
-            .unwrap();
+            .unwrap()
+            .to_ascii_uppercase();
     }
 
-    pub fn print_board(self) {
+    pub fn print_board(&self) {
         println!(" +--+--+--+--+--+--+--+--+");
         let mut row_num = 8;
         for i in (0..8).rev() {
@@ -64,5 +63,11 @@ impl Board {
             row_num -= 1;
         }
         println!("  a  b  c  d  e  f  g  h\t{}'s turn", self.turn);
+    }
+
+    fn is_check() {}
+
+    pub fn is_checkmate(&self) -> u8 {
+        0
     }
 }
