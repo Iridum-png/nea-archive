@@ -47,7 +47,11 @@ impl Board {
             .to_ascii_uppercase();
     }
 
+<<<<<<< HEAD
     pub fn print_board(&self) {
+=======
+    pub fn print_board(self) -> Board {
+>>>>>>> 6cc83f690286307d73d7403a8291c230f798d339
         println!(" +--+--+--+--+--+--+--+--+");
         let mut row_num = 8;
         for i in (0..8).rev() {
@@ -63,6 +67,7 @@ impl Board {
             row_num -= 1;
         }
         println!("  a  b  c  d  e  f  g  h\t{}'s turn", self.turn);
+        self
     }
 
     fn is_check() {}
