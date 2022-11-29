@@ -19,7 +19,7 @@ class Board:
                 else:
                     piece_colour = 'w' if symbol.isupper() else 'b'
                     piece_type = piece_type_from_symbol[symbol.lower()]
-                    self.board.append(piece_type(piece_colour))  
+                    self.board.append(piece_type(piece_colour))
         self.turn = fen.split(' ')[1]
 
     def printBoard(self):
@@ -32,7 +32,7 @@ class Board:
             for j in range(8):
                 current = self.board[i*8 + j]
                 try:
-                    print(f"{current.getColour()}{current.getType()}|", end="")
+                    print(f"{current.get_colour()}{current.get_type()}|", end="")
                 except AttributeError:
                     print("  |", end="")
             print("\n +--+--+--+--+--+--+--+--+")
@@ -57,16 +57,16 @@ class Board:
         if check[1]:
             self.board = check[1]
 
-    def isWon(self):
+    def is_won(self):
         return False
 
     def log(self, end: tuple, target) -> None:
-        # Write to a file in the format of PGN
+        '''Writes the move to a log file in PGN format'''
         with open(r'/Users/edwardbaker/Documents/nea/chess/output/log.log', 'a+') as log:
             if self.turn == 'w':
-                log.write(f"{self.move_count}. {target.getType() if target.getType() != 'P' else ''}{chr(end[1]+97)}{end[0]+1} ")
+                log.write(f"{self.move_count}. {target.get_type() if target.get_type() != 'P' else ''}{chr(end[1]+97)}{end[0]+1} ")
             else:
-                log.write(f"{target.getType() if target.getType() != 'P' else ''}{chr(end[1]+97)}{end[0]+1}" + "\n")
+                log.write(f"{target.get_type() if target.get_type() != 'P' else ''}{chr(end[1]+97)}{end[0]+1}" + "\n")
 
 if __name__ == '__main__':
     print("File run incorrectly - please run game.py instead")
