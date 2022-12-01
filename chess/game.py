@@ -1,5 +1,5 @@
 def process(coordinate: str) -> tuple:
-     # Convert board coordinates into array index
+    '''Convert board coordinates into array index'''
     return (int(coordinate[1]) - 1, ord(coordinate[0]) - 97)
 
 def resetTurn(board) -> None:
@@ -19,15 +19,14 @@ def turn(board) -> bool:
             end = process(end)
         else:
             resetTurn(board)
-    except:
+    except Exception:
         resetTurn(board)
 
     board.move(start, end)
     return board.isWon()
 
 def main():
-    with open(r'log.log', 'w') as f:
-        pass
+    open(r'log.log', 'w').close() # Clear the log file for a new game
 
     board = Board()
 
@@ -44,4 +43,4 @@ if __name__ == '__main__':
 
     main()
 else:
-    print("File run incorrectly")
+    print("File run incorrectly - Please run game.py directly") 

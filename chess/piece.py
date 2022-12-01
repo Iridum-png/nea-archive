@@ -4,17 +4,19 @@ class Piece:
         self.__colour = colour
 
     def isColour(self, colour: str) -> bool:
+        print(self.__colour, colour)
         return self.__colour == colour
 
     def getColour(self) -> str:
         if self.__colour:
-            return self.__colour.upper()
+            return self.__colour
         return ' '
 
     def getType(self):
         return self.__type
 
-    def colourCheck(self, working, target, turn):
+    def colourCheck(self, working, target, turn: str) -> bool: # NOTE - Can't type hint working or target here correctly for some reason
+        print(f"{working.isColour(turn)}, {target.isColour(turn)}")
         if working.isColour(turn):
             try:
                 if not target.isColour(turn):
@@ -26,50 +28,48 @@ class Piece:
 class Pawn(Piece):
     def __init__(self, colour: str):
         Piece.__init__(self, colour)
-        self.__type = 'P'
         self.__moved = False
 
-    def isValid(self, working: Piece, target: Piece, working_index: int, target_index: int, turn: str) -> bool: # TODO en passant
+    def isValid(self, working: Piece, target: Piece, working_index: int, target_index: int, turn: str, board: list) -> bool: # TODO en passant
         valid = False
         if Piece.colourCheck(self, working, target, turn):
-            if self.__colour == 'w':
-                if target_index == working_index + 16 and self.__moved == False and target.getType() == ' ':
+            if self.getColour() == 'W': # Logic for white's movement
+                if target_index == working_index + 16 and self.__moved == False and target.getType() == ' ': # Logic for moving forwards 2 squares
                     valid = True
-                elif target_index == working_index + 8 and target.getType() == ' ':
+                elif target_index == working_index + 8 and target.getType() == ' ': # Logic for moving forwards 1 sqaure
                     valid = True
-                elif target.getColour() != self.getColour() and target.getColour() != ' ':
+                elif target.getColour() != self.getColour() and target.getColour() != ' ': # Logic for taking piece
                     if target_index == working_index + 7 or target_index == working_index + 9:
                         valid = True
-            else: 
-                if target_index == working_index - 16 and self.__moved == False and target.getType() == ' ':
+            else: # Logic for black's movement
+                if target_index == working_index - 16 and self.__moved == False and target.getType() == ' ': # Logic for moving forward 2 squares
                     valid = True
-                elif target_index == working_index - 8 and target.getType() == ' ':
+                elif target_index == working_index - 8 and target.getType() == ' ': # Logic for moving forward one square
                     valid = True
-                elif target.getColour() != self.getColour() and target.getColour() != ' ':
+                elif target.getColour() != self.getColour() and target.getColour() != ' ': # Logic for taking a piece
                     if target_index == working_index - 7 or target_index == working_index - 9:
                         valid = True
         # Check for en passant
         
-        if valid:
+        if valid and not self.__moved:
             self.__moved = True
         return valid
 
     def getType(self) -> str:
-        return self.__type
+        return 'P'
 
 class Knight(Piece):
     def __init__(self, colour):
         Piece.__init__(self, colour)
-        self.__type = 'N'
-
-    def getType(self):
-        return 'N'
 
     def isValid(self, working: Piece, target: Piece, working_index: int, target_index: int, turn: str) -> bool:
         if Piece.colourCheck(self, working, target, turn):
             if abs(working_index - target_index) in [17, 15, 6, 10] and target_index != working_index:
                 return True
         return False
+    
+    def getType(self):
+        return 'N'
 
 class Bishop(Piece):
     def __init__(self, colour):
@@ -164,24 +164,19 @@ class Queen(Piece):
 class King(Piece):
     def __init__(self, colour):
         Piece.__init__(self, colour)
-        self.__type = 'K'
         self.has_moved = False
 
     def isValid(self, working: Piece, target: Piece, working_index: int, target_index: int, turn: str) -> bool:
         if Piece.colourCheck(self, working, target, turn):
             if abs(working_index - target_index) in [15, 1, 17, 9, 7, 8, 16, 24]:
                 return False
-
+    
     def getType(self):
-        return ' '
-
-    def getColour(self):
-        return ' '
+        return 'K'
 
 class Empty(Piece):
     def __init__(self):
         Piece.__init__(self, ' ')
-        self.__type = ' '
 
     def getType(self):
         return ' '
