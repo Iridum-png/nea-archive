@@ -9,3 +9,4 @@ chess-rust/target/CACHEDIR.TAG
 /.vscode/
 temp
 rust-wasm
+log.log
