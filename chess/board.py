@@ -50,10 +50,10 @@ class Board:
         target_index = end[0]*8 + end[1]
         target = self.board[target_index]
 
-        check =  working.isValid(working, target, working_index, target_index, self.turn, self.board) # Checks move validity
-        print(check)
+        valid =  working.is_valid(working, target, working_index, target_index, self.turn, self.board) # Checks move validity
+        print(valid)
         
-        if check: # Makes the move
+        if valid: # Makes the move
             self.log(end, target)
             self.board[target_index] = working
             self.board[working_index] = Empty()

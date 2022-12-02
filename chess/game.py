@@ -1,10 +1,12 @@
+'''The module that handles the calling of most of the game setup and logic'''
+
 def process(coordinate: str) -> tuple:
     '''Convert board coordinates into array index'''
     return (int(coordinate[1]) - 1, ord(coordinate[0]) - 97)
 
 def reset_turn(board) -> None:
     '''Used to reset the turn if the user enters an invalid move'''
-    board.printBoard()
+    board.print_board()
     turn(board)
 
 def turn(board) -> bool:
@@ -22,7 +24,7 @@ def turn(board) -> bool:
 def get_move(start, board) -> tuple:
     '''Gets the move from the user'''
     valid_letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
-    order = 'start' if start else 'target'
+    order = 'target' if start else 'destination'
 
     location = input(f"Enter the location of the {order} square: ")
 
@@ -52,4 +54,6 @@ if __name__ == '__main__':
     from board import Board
     main()
 else:
-    print("File run incorrectly - Please run game.py directly") 
+    print("File run incorrectly - Please run game.py directly")
+
+ # TODO Move validation doesn't work for pawns, maybe other pieces too

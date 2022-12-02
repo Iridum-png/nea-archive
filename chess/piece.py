@@ -1,5 +1,7 @@
-class Piece:
-    '''Base class for all pieces'''
+from __future__ import annotations
+
+class Square:
+    '''Base class for all squares'''
     def __init__(self, colour: str):
         self.__type = ' '
         self.__colour = colour
@@ -15,9 +17,8 @@ class Piece:
     def get_type(self) -> str:
         return self.__type
 
-    def colourCheck(self, working, target, turn: str) -> bool: # NOTE - Can't type hint working or target here correctly for some reason
-        print(f"{working.isColour(turn)}, {target.isColour(turn)}")
-        if working.isColour(turn):
+    def colour_check(self, working: Square, target: Square, turn: str) -> bool: # NOTE - Can't type hint working or target here correctly for some reason
+        if working.is_colour(turn):
             try:
                 if not target.is_colour(turn):
                     return True
@@ -25,29 +26,29 @@ class Piece:
                 return True
         return False
 
-class Pawn(Piece):
-    '''Class for the Pawn piece'''
+class Pawn(Square):
+    '''Class for the Pawn Piece'''
     def __init__(self, colour: str):
-        Piece.__init__(self, colour)
+        super().__init__(colour)
         self.__moved = False
 
-    def isValid(self, working: Piece, target: Piece, working_index: int, target_index: int, turn: str, board: list) -> bool: # TODO en passant
+    def is_valid(self, working: Square, target: Square, working_index: int, target_index: int, turn: str, board: list) -> bool: # TODO en passant
         valid = False
-        if Piece.colourCheck(self, working, target, turn):
-            if self.getColour() == 'W': # Logic for white's movement
-                if target_index == working_index + 16 and self.__moved == False and target.getType() == ' ': # Logic for moving forwards 2 squares
+        if Square.colour_check(self, working, target, turn):
+            if self.get_colour() == 'W': # Logic for white's movement
+                if target_index == working_index + 16 and not self.__moved and target.getType() == ' ': # Logic for moving forwards 2 squares
                     valid = True
                 elif target_index == working_index + 8 and target.getType() == ' ': # Logic for moving forwards 1 sqaure
                     valid = True
-                elif target.getColour() != self.getColour() and target.getColour() != ' ': # Logic for taking piece
+                elif target.get_colour() != self.get_colour() and target.get_colour() != ' ': # Logic for taking Square
                     if target_index == working_index + 7 or target_index == working_index + 9:
                         valid = True
             else: # Logic for black's movement
-                if target_index == working_index - 16 and self.__moved == False and target.getType() == ' ': # Logic for moving forward 2 squares
+                if target_index == working_index - 16 and not self.__moved and target.getType() == ' ': # Logic for moving forward 2 squares
                     valid = True
                 elif target_index == working_index - 8 and target.getType() == ' ': # Logic for moving forward one square
                     valid = True
-                elif target.getColour() != self.getColour() and target.getColour() != ' ': # Logic for taking a piece
+                elif target.get_colour() != self.get_colour() and target.get_colour() != ' ': # Logic for taking a Square
                     if target_index == working_index - 7 or target_index == working_index - 9:
                         valid = True
         # Check for en passant
@@ -56,41 +57,41 @@ class Pawn(Piece):
             self.__moved = True
         return valid
 
-    def getType(self) -> str:
+    def get_type(self) -> str:
         return 'P'
 
-class Knight(Piece):
-    '''Class for the Knight piece'''
+class Knight(Square):
+    '''Class for the Knight Piece'''
     def __init__(self, colour):
-        Piece.__init__(self, colour)
+        super().__init__(colour)
 
-    def isValid(self, working: Piece, target: Piece, working_index: int, target_index: int, turn: str) -> bool:
-        if Piece.colourCheck(self, working, target, turn):
+    def is_valid(self, working: Square, target: Square, working_index: int, target_index: int, turn: str, board: list) -> bool:
+        if Square.colour_check(self, working, target, turn):
             if abs(working_index - target_index) in [17, 15, 6, 10] and \
                 target_index != working_index:
                 return True
         return False
     
-    def getType(self):
+    def get_type(self):
         return 'N'
 
-class Bishop(Piece):
-    '''Class for the Bishop piece'''
+class Bishop(Square):
+    '''Class for the Bishop Piece'''
     def __init__(self, colour):
-        Piece.__init__(self, colour)
+        super().__init__(colour)
 
-    def is_valid(self, working: Piece, target: Piece, working_index: int, target_index: int, turn: str) -> bool:
+    def is_valid(self, working: Square, target: Square, working_index: int, target_index: int, turn: str, board: list) -> bool:
         '''Checks if the move is valid for bishops'''
-        if Piece.colourCheck(self, working, target, turn):
+        if Square.colour_check(self, working, target, turn):
             direction = working_index - target_index
             if abs(direction) % 7 == 0:
                 for i in range(7, abs(direction), 7):
-                    if self.board[working_index + i if direction > 0 else working_index - i]:
+                    if board[working_index + i if direction > 0 else working_index - i]:
                         return False
                 return True
             elif abs(direction) % 9 == 0:
                 for i in range(9, abs(direction), 9):
-                    if self.board[working_index + i if direction > 0 else working_index - i]:
+                    if board[working_index + i if direction > 0 else working_index - i]:
                         return False
                 return True
         return False
@@ -98,68 +99,52 @@ class Bishop(Piece):
     def get_type(self):
         return 'B'
 
-class Rook(Piece):
-    '''Class for the Rook piece'''
+class Rook(Square):
+    '''Class for the Rook Piece'''
     def __init__(self, colour):
-        Piece.__init__(self, colour)
+        super().__init__(colour)
         self.has_moved = False
 
+    def is_valid(self, working: Square, target: Square, working_index: int, target_index: int, turn: str, board: list) -> bool:
+        if Square.colour_check(self, working, target, turn):
+            direction = working_index - target_index
+            if abs(direction) % 8 == 0:
+                for i in range(8, abs(direction), 8):
+                    if board[working_index + i if direction > 0 else working_index - i]:
+                        return False
+            elif abs(direction) % 1 == 0:
+                for i in range(1, abs(direction), 1):
+                    if board[working_index + i if direction > 0 else working_index - i]:
+                        return False
+            return True
+        return False
+        # Check for piece collisions in the move
+        
     def get_type(self):
         return 'R'
-
-    def is_valid(self, working: Piece, target: Piece, working_index: int, target_index: int, turn: str) -> bool:
-        if Piece.colourCheck(self, working, target, turn):
-            if self.board[16] != self.board[17] != self.board[18] != self.board[19] != self.board[20]:
-                raise Exception('Error: BOARD RANGE INVALID')
-
-            index = self.board[28:100+16].index(None)
-            last = self.board.index(None)
-            print("hello edwards, i would like to say that i am a very big fan of your work and i would like to know if you would like to go out for a coffee sometime?")
-            print("i am want your bepis in mine mouthyyyyy slurrrp yummyyyy i wanty ")
-
-            if(working_index > last - index):
-                print('LONG RANGE WORKING INDEX')
-                return True
-
-            elif(working_index < (last-index)):
-                print('SHORT RANGE WORKING INDEX')
-                return True
-
-            elif(working_index < 8):
-                direction = working_index - target_index
-
-                if direction != 0 and abs(direction) <= index:
-                    for i in range(8, abs(direction), 8):
-                        print(direction > 0)
-
-                        if self.board[working_index + i if direction > 0 else working_index - i]:
-                            print('IS RETURN VALUE')
-                            return False
-
-            return True
         
 
-class Queen(Piece):
-    '''Class for the Queen piece'''
+class Queen(Square):
+    '''Class for the Queen Piece'''
     def __init__(self, colour):
-        Piece.__init__(self, colour)
+        super().__init__(colour)
 
-    def isValid(self, working: Piece, target: Piece, working_index: int, target_index: int, turn: str) -> bool:
-        if Piece.colourCheck(self, working, target, turn):
+    def is_valid(self, working: Square, target: Square, working_index: int, target_index: int, turn: str, board: list) -> bool:
+        if Square.colour_check(self, working, target, turn):
             direction = working_index - target_index
             if abs(direction) % 7 == 0:
                 for i in range(7, abs(direction), 7):
-                    if self.board[working_index + i if direction > 0 else working_index - i]:
+                    if board[working_index + i if direction > 0 else working_index - i]:
                         return False
                 return True
             elif abs(direction) % 9 == 0:
                 for i in range(9, abs(direction), 9):
-                    if self.board[working_index + i if direction > 0 else working_index - i]:
+                    if board[working_index + i if direction > 0 else working_index - i]:
                         return False
                 return True
             elif abs(direction) % 8 == 0:
                 for i in range(8, abs(direction), 8):
-                    if self.board[working_index + i if direction > 0 else working_index - i]:
+                    if board[working_index + i if direction > 0 else working_index - i]:
                         return False
                 return True
         return False
@@ -167,24 +152,24 @@ class Queen(Piece):
     def get_type(self):
         return 'Q'
 
-class King(Piece):
-    '''Class for the King piece'''
+class King(Square):
+    '''Class for the King Piece'''
     def __init__(self, colour):
-        Piece.__init__(self, colour)
+        super().__init__(colour)
         self.has_moved = False
 
-    def isValid(self, working: Piece, target: Piece, working_index: int, target_index: int, turn: str) -> bool:
-        if Piece.colourCheck(self, working, target, turn):
+    def is_valid(self, working: Square, target: Square, working_index: int, target_index: int, turn: str) -> bool:
+        if Square.colour_check(self, working, target, turn):
             if abs(working_index - target_index) in [15, 1, 17, 9, 7, 8, 16, 24]:
                 return False
     
-    def getType(self):
+    def get_type(self):
         return 'K'
 
-class Empty(Piece):
+class Empty(Square):
     '''Class for Empty spaces on the board'''
     def __init__(self):
-        Piece.__init__(self, ' ')
+        Square.__init__(self, ' ')
 
     def get_type(self):
         return ' '
