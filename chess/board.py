@@ -10,27 +10,27 @@ class Board:
     def load_from_fen(self, fen='rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'):
         '''Loads the board from a FEN string'''
         piece_type_from_symbol = {'k': King, 'q': Queen, 'r': Rook, 'b': Bishop, 'n': Knight, 'p': Pawn}
-
-        fen_board = fen.split(' ')[0][::-1].split('/')
-
+        
+        fen_board = fen.split(' ')[0][::-1].split('/') # Isolate the part relating to board arrangement
+        
         for rows in fen_board:
-            for symbol in rows[::-1]:
-                if symbol.isdigit():
+            for symbol in rows[::-1]: # Puts the FEN string in the correct order for indexing later
+                if symbol.isdigit(): # Appends blank spaces to the board
                     for _ in range(int(symbol)):
                         self.board.append(Empty())
-                else:
-                    piece_colour = 'w' if symbol.isupper() else 'b'
-                    piece_type = piece_type_from_symbol[symbol.lower()]
-                    self.board.append(piece_type(piece_colour))
-        self.turn = fen.split(' ')[1]
+                else: # Appends pieces to the board
+                    piece_colour = 'W' if symbol.isupper() else 'B' # Assings piece colour
+                    piece_type = piece_type_from_symbol[symbol.lower()] # Assigns piece type
+                    self.board.append(piece_type(piece_colour)) # Appends piece
+        self.turn = fen.split(' ')[1] # Sets correct turn based on FEN string
 
     def print_board(self):
         '''Prints the board to the console'''
         # from os import system, name
-        # system('cls' if name == 'nt' else 'clear')
+        # system('cls' if name == 'nt' else 'clear') # Clear the terminal output
         print(" +--+--+--+--+--+--+--+--+")
         row_num = 8
-        for i in range(7, -1, -1):
+        for i in range(7, -1, -1): # Prints the board
             print(str(row_num)+"|", end="")
             for j in range(8):
                 current = self.board[i*8 + j]
@@ -45,21 +45,22 @@ class Board:
     def move(self, start: tuple, end: tuple):
         '''Moves the piece from start to end, assuming valid move'''
         working_index = start[0]*8 + start[1]
+        working_index = start[0]*8 + start[1] # Puts the coordinate format into the correct format for indexing the array
         working = self.board[working_index]
         target_index = end[0]*8 + end[1]
         target = self.board[target_index]
 
-        check =  working.isValid(working, target, working_index, target_index, self.turn, self.board)
-        if check:
+        check =  working.isValid(working, target, working_index, target_index, self.turn, self.board) # Checks move validity
+        print(check)
+        
+        if check: # Makes the move
             self.log(end, target)
             self.board[target_index] = working
             self.board[working_index] = Empty()
-            self.turn = 'b' if self.turn == 'w' else 'w'
-            self.move_count += 1 if self.turn == 'b' else 0
+            self.turn = 'B' if self.turn == 'W' else 'W'
+            self.move_count += 1 if self.turn == 'B' else 0
         else:
             print("Invalid move")
-        if check[1]:
-            self.board = check[1]
 
     def is_won(self):
         '''Evaluates whether the game is won'''

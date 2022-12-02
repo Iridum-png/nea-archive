@@ -9,14 +9,15 @@ class Piece:
 
     def get_colour(self) -> str:
         if self.__colour:
-            return self.__colour.upper()
+            return self.__colour
         return ' '
 
     def get_type(self) -> str:
         return self.__type
 
-    def colourCheck(self, working, target, turn):
-        if working.is_colour(turn):
+    def colourCheck(self, working, target, turn: str) -> bool: # NOTE - Can't type hint working or target here correctly for some reason
+        print(f"{working.isColour(turn)}, {target.isColour(turn)}")
+        if working.isColour(turn):
             try:
                 if not target.is_colour(turn):
                     return True
@@ -30,35 +31,34 @@ class Pawn(Piece):
         Piece.__init__(self, colour)
         self.__moved = False
 
-    def isValid(self, working: Piece, target: Piece, working_index: int, target_index: int, turn: str) -> bool:
+    def isValid(self, working: Piece, target: Piece, working_index: int, target_index: int, turn: str, board: list) -> bool: # TODO en passant
         valid = False
         if Piece.colourCheck(self, working, target, turn):
-            if self.__colour == 'w':
-                if target_index == working_index + 16 and self.__moved is False and \
-                    target.get_type() == ' ':
+            if self.getColour() == 'W': # Logic for white's movement
+                if target_index == working_index + 16 and self.__moved == False and target.getType() == ' ': # Logic for moving forwards 2 squares
                     valid = True
-                elif target_index == working_index + 8 and target.get_type() == ' ':
+                elif target_index == working_index + 8 and target.getType() == ' ': # Logic for moving forwards 1 sqaure
                     valid = True
-                elif target.get_colour() != self.get_colour() and target.get_colour() != ' ':
+                elif target.getColour() != self.getColour() and target.getColour() != ' ': # Logic for taking piece
                     if target_index == working_index + 7 or target_index == working_index + 9:
                         valid = True
-            else: 
-                if target_index == working_index - 16 and self.__moved is False and target.get_type() == ' ':
+            else: # Logic for black's movement
+                if target_index == working_index - 16 and self.__moved == False and target.getType() == ' ': # Logic for moving forward 2 squares
                     valid = True
-                elif target_index == working_index - 8 and target.get_type() == ' ':
+                elif target_index == working_index - 8 and target.getType() == ' ': # Logic for moving forward one square
                     valid = True
-                elif target.get_colour() != self.get_colour() and target.get_colour() != ' ':
+                elif target.getColour() != self.getColour() and target.getColour() != ' ': # Logic for taking a piece
                     if target_index == working_index - 7 or target_index == working_index - 9:
                         valid = True
         # Check for en passant
         
-        if valid:
+        if valid and not self.__moved:
             self.__moved = True
         return valid
 
-    def get_type(self) -> str:
+    def getType(self) -> str:
         return 'P'
-    
+
 class Knight(Piece):
     '''Class for the Knight piece'''
     def __init__(self, colour):
@@ -70,10 +70,9 @@ class Knight(Piece):
                 target_index != working_index:
                 return True
         return False
-   
-    def get_type(self):
+    
+    def getType(self):
         return 'N'
-
 
 class Bishop(Piece):
     '''Class for the Bishop piece'''
@@ -178,12 +177,9 @@ class King(Piece):
         if Piece.colourCheck(self, working, target, turn):
             if abs(working_index - target_index) in [15, 1, 17, 9, 7, 8, 16, 24]:
                 return False
-
-    def get_type(self):
-        return ' '
-
-    def get_colour(self):
-        return ' '
+    
+    def getType(self):
+        return 'K'
 
 class Empty(Piece):
     '''Class for Empty spaces on the board'''

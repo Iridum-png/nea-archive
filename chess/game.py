@@ -52,4 +52,4 @@ if __name__ == '__main__':
     from board import Board
     main()
 else:
-    print("File run incorrectly")
+    print("File run incorrectly - Please run game.py directly") 
