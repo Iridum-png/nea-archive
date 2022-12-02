@@ -1,16 +1,18 @@
-from piece import Piece, Pawn, Rook, Knight, Bishop, Queen, King, Empty
+from piece import Pawn, Rook, Knight, Bishop, Queen, King, Empty
 
 class Board:
+    '''Class for the board'''
     def __init__(self):
         self.board = []
         self.turn = 'w'
         self.move_count = 1
 
-    def loadFromFen(self, fen='rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'):
+    def load_from_fen(self, fen='rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'):
+        '''Loads the board from a FEN string'''
         piece_type_from_symbol = {'k': King, 'q': Queen, 'r': Rook, 'b': Bishop, 'n': Knight, 'p': Pawn}
-        
+
         fen_board = fen.split(' ')[0][::-1].split('/')
-        
+
         for rows in fen_board:
             for symbol in rows[::-1]:
                 if symbol.isdigit():
@@ -19,10 +21,11 @@ class Board:
                 else:
                     piece_colour = 'w' if symbol.isupper() else 'b'
                     piece_type = piece_type_from_symbol[symbol.lower()]
-                    self.board.append(piece_type(piece_colour))  
+                    self.board.append(piece_type(piece_colour))
         self.turn = fen.split(' ')[1]
 
-    def printBoard(self):
+    def print_board(self):
+        '''Prints the board to the console'''
         # from os import system, name
         # system('cls' if name == 'nt' else 'clear')
         print(" +--+--+--+--+--+--+--+--+")
@@ -32,7 +35,7 @@ class Board:
             for j in range(8):
                 current = self.board[i*8 + j]
                 try:
-                    print(f"{current.getColour()}{current.getType()}|", end="")
+                    print(f"{current.get_colour()}{current.get_type()}|", end="")
                 except AttributeError:
                     print("  |", end="")
             print("\n +--+--+--+--+--+--+--+--+")
@@ -40,6 +43,7 @@ class Board:
         print(f"  a  b  c  d  e  f  g  h\t{self.turn.upper()}'s turn")
 
     def move(self, start: tuple, end: tuple):
+        '''Moves the piece from start to end, assuming valid move'''
         working_index = start[0]*8 + start[1]
         working = self.board[working_index]
         target_index = end[0]*8 + end[1]
@@ -57,16 +61,17 @@ class Board:
         if check[1]:
             self.board = check[1]
 
-    def isWon(self):
+    def is_won(self):
+        '''Evaluates whether the game is won'''
         return False
 
     def log(self, end: tuple, target) -> None:
-        # Write to a file in the format of PGN
-        with open(r'/Users/edwardbaker/Documents/nea/chess/output/log.log', 'a+') as log:
+        '''Writes the move to a log file in PGN format'''
+        with open(r'/Users/edwardbaker/Documents/nea/chess/output/log.log', 'a+', encoding="utf-8") as log:
             if self.turn == 'w':
-                log.write(f"{self.move_count}. {target.getType() if target.getType() != 'P' else ''}{chr(end[1]+97)}{end[0]+1} ")
+                log.write(f"{self.move_count}. {target.get_type() if target.get_type() != 'P' else ''}{chr(end[1]+97)}{end[0]+1} ")
             else:
-                log.write(f"{target.getType() if target.getType() != 'P' else ''}{chr(end[1]+97)}{end[0]+1}" + "\n")
+                log.write(f"{target.get_type() if target.get_type() != 'P' else ''}{chr(end[1]+97)}{end[0]+1}" + "\n")
 
 if __name__ == '__main__':
     print("File run incorrectly - please run game.py instead")
