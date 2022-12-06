@@ -35,6 +35,7 @@ class Pawn(Square):
     def is_valid(self, working: Square, target: Square, working_index: int, target_index: int, turn: str, board: list) -> bool: # TODO en passant
         valid = False
         if Square.colour_check(self, working, target, turn):
+            print("Correct colour chosen")
             if self.get_colour() == 'W': # Logic for white's movement
                 if target_index == working_index + 16 and not self.__moved and target.getType() == ' ': # Logic for moving forwards 2 squares
                     valid = True

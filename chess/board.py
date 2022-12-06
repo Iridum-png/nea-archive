@@ -49,9 +49,11 @@ class Board:
         working = self.board[working_index]
         target_index = end[0]*8 + end[1]
         target = self.board[target_index]
+        
+        print(working.get_type(), working.get_colour(), target.get_type(), target.get_colour())
 
         valid =  working.is_valid(working, target, working_index, target_index, self.turn, self.board) # Checks move validity
-        print(valid)
+        print(valid, "valid")
         
         if valid: # Makes the move
             self.log(end, target)
