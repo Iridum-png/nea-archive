@@ -16,6 +16,7 @@
 
 ---
 <p align="center"> === CODE IS NOW ARCHIVED ===
+    <br>
     Refer to https://github.com/Iridum-png/warden-chess
 </p>
 <p align="center"> This is a project made for my computer science NEA. It takes the form of a Chess AI bundled into helping people improve at the game by creating realistic goals and understandable feedback.
